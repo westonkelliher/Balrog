@@ -1,5 +1,5 @@
 extends Area3D
-class_name GravObject
+class_name FieldedBody
 
 var bodies := []
 @export var gravity_func: Callable = default_get_gravity

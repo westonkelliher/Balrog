@@ -2,21 +2,19 @@
 
 [ext_resource type="Script" path="res://scripts/floor.gd" id="1_1ejcy"]
 [ext_resource type="Material" uid="uid://gge1nkc5bfx0" path="res://mats/grass.tres" id="1_flcqi"]
-[ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/grav_object.tscn" id="2_ddtix"]
+[ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/fielded_body.tscn" id="2_ddtix"]
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_spfcg"]
-custom_solver_bias = 1.0
-margin = 0.1
-height = 4.0
-radius = 100.0
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_veqbt"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_qyjoe"]
 material = ExtResource("1_flcqi")
-top_radius = 100.0
-bottom_radius = 100.0
-height = 4.0
-radial_segments = 128
+top_radius = 8.0
+bottom_radius = 8.0
 rings = 0
+
+[sub_resource type="TorusMesh" id="TorusMesh_wtoy4"]
+material = ExtResource("1_flcqi")
+inner_radius = 7.0
+outer_radius = 9.0
+ring_segments = 16
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_r6fy6"]
 height = 400.0
@@ -25,15 +23,16 @@ radius = 400.0
 [node name="Floor" type="StaticBody3D"]
 collision_mask = 6
 script = ExtResource("1_1ejcy")
-radius = 100.0
-height = 4.0
-atmospheric_half_life = 100.0
+radius = 20.0
+height = 10.0
+atmospheric_half_life = 30.0
+gravitational_half_life = 50.0
 
-[node name="Shape" type="CollisionShape3D" parent="."]
-shape = SubResource("CylinderShape3D_spfcg")
+[node name="Flat" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_qyjoe")
 
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("CylinderMesh_veqbt")
+[node name="Edge" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_wtoy4")
 
 [node name="GravObject" parent="." instance=ExtResource("2_ddtix")]
 gravity_func = Callable()

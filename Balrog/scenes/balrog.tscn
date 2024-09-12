@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8dk41e3poig1"]
+[gd_scene load_steps=10 format=3 uid="uid://c8dk41e3poig1"]
 
 [ext_resource type="Script" path="res://scripts/balrog.gd" id="1_ecelo"]
 [ext_resource type="Material" uid="uid://dj8c8abta0f7j" path="res://mats/black.tres" id="1_mcbjj"]
 [ext_resource type="PackedScene" uid="uid://dossusm1hrl70" path="res://scenes/wing.tscn" id="1_q2pr5"]
+[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="4_633lb"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g13f3"]
 
@@ -14,6 +15,10 @@ material = ExtResource("1_mcbjj")
 inner_radius = 0.2
 outer_radius = 0.5
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_y8vfy"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_i5fyr"]
+
 [node name="Balrog" type="CharacterBody3D"]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 collision_layer = 2
@@ -22,15 +27,15 @@ floor_max_angle = 1.5708
 script = ExtResource("1_ecelo")
 
 [node name="Shape" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 shape = SubResource("CapsuleShape3D_g13f3")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 mesh = SubResource("CapsuleMesh_emnp0")
 
 [node name="Wings" type="Node3D" parent="."]
-transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 0, 0.9, 0.45)
+transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 0, 1.4, 0.45)
 
 [node name="Wing_R" parent="Wings" instance=ExtResource("1_q2pr5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
@@ -39,12 +44,22 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="SpringArm" type="SpringArm3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 spring_length = 5.0
 margin = 0.5
 
 [node name="Camera3D" type="Camera3D" parent="SpringArm"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -1.02624, 0.858316, 0, -1.71663, -0.513122, 0, 1.362, -0.134269)
+transform = Transform3D(1, 0, 0, 0, -1.02624, 0.858316, 0, -1.71663, -0.513122, 0, 1.55, -0.134)
 mesh = SubResource("TorusMesh_w81dx")
+
+[node name="FieldCollider" parent="." instance=ExtResource("4_633lb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("SphereShape3D_y8vfy")
+radius = 0.5
+
+[node name="FieldCollider2" parent="." instance=ExtResource("4_633lb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("SphereShape3D_i5fyr")
+radius = 0.5

@@ -10,11 +10,12 @@ signal throw_rock(rock: Rock)
 @export var acceleration := 2.0
 @export var jump_speed := 5.0
 
-var field_bodies: Array[GravObject] = []
+var field_colliders: Array[FieldCollider] = []
+var field_bodies: Array[FieldedBody] = []
 var total_gravity := Vector3.ZERO
 var jumping := false
 var on_floor := 0.0
-const DEFLOOR_RATE := 2.0
+const DEFLOOR_RATE := 6.0
 
 var is_wings_tucked := true
 var is_wings_raised := false
@@ -29,7 +30,13 @@ const ROCK_IMPULSE := 30.0
 
 var atmosphere := 1.0
 
+var floor_clips := []
+
+
 func _ready() -> void:
+	field_colliders.append($FieldCollider)
+	field_colliders.append($FieldCollider2)
+	#
 	$Wings/Wing_L.set_tucked(is_wings_tucked)
 	$Wings/Wing_R.set_tucked(is_wings_tucked)
 
@@ -41,28 +48,29 @@ func _physics_process(delta: float) -> void:
 	handle_jumping(delta)
 	handle_wing_forces(delta)
 	handle_misc_input()
-	#print(str(position) + " " + str(is_on_floor())  + " " + str(on_floor))
 	#
 	#print(basis)
 	rotation_speed = 4
 	#print(str(velocity) + "  " + str(displacement_velocity))
 	velocity = velocity + displacement_velocity
 	last_velocity = velocity
+	print("velocity: " + str(velocity))
+	print("on_floor: " + str(on_floor))
+	handle_flooriness(delta) # shoudl this be before move_and_slide
+	print("on_floor: " + str(on_floor))
 	move_and_slide()
 	if velocity.length() > 0.0:
 		velocity *= (last_velocity - displacement_velocity).length()/last_velocity.length()
-	handle_flooriness(delta)
-	handle_floorclip_hardcode()
-	#if is_on_floor() and on_floor < 0.5:
-		#print(on_floor)
-		#velocity = 0.1 * last_velocity.bounce(total_gravity.normalized())
+	calculate_floor_clips()
+	handle_floor_clips(delta)
 
 func calculate_fields(delta: float) -> void:
 	# calculate weights
 	var weights := []
 	var total_weight := 0.0
 	for fb in field_bodies:
-		var w: float = 1/fb.signed_distance_func.call(global_position)
+		var signed_distance: float = fb.signed_distance_func.call(global_position)
+		var w:= 1.0/pow(signed_distance, 0.7)
 		total_weight += w
 		weights.append(w)
 	for i in weights.size():
@@ -84,37 +92,43 @@ func calculate_fields(delta: float) -> void:
 		var fb := field_bodies[i]
 		atmosphere += fb.atmosphere_func.call(global_position) * weights[i]
 
-func handle_floorclip_hardcode() -> void:
-	if position.x > 0:
-		return
-	if position.y > 0 and position.y < 2.5:
-		if on_floor == 0.0:
-			land()
+func calculate_floor_clips() -> void:
+	floor_clips = []
+	for fb in field_bodies:
+		var signed_distance: float = fb.signed_distance_func.call(global_position)
+		for collider in field_colliders:
+			if signed_distance < collider.radius:
+				floor_clips.append(fb)
+
+func handle_floor_clips(delta: float) -> void:
+	floor_clips = []
+	for fb in field_bodies:
+		for collider in field_colliders:
+			var signed_distance: float = fb.signed_distance_func.call(collider.global_position)
+			if signed_distance < collider.radius:
+				handle_a_floor_clip(delta, fb, collider)
+
+func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> void:
+	var signed_distance: float = fb.signed_distance_func.call(fc.global_position)
+	var normal: Vector3 = fb.normal_func.call(fc.global_position)
+	var depth = fc.radius - signed_distance
+	position += normal*depth
+	var vel_projection := velocity.dot(normal) * normal
+	velocity -= vel_projection
+	if fc == $FieldCollider:
 		on_floor = 1.0
-		position.y = 2.5
-	if position.y < 0 and position.y > -2.5:
-		if on_floor == 0.0:
-			land()
-		position.y = -2.5
-		on_floor = 1.0
+	print("floor clip depth: " + str(depth))
+		
 
 func handle_flooriness(delta: float) -> void:
-	if is_on_floor():
-		if on_floor == 0.0:
-			land()
-		on_floor = 1.0
-	else:
-		on_floor = move_toward(on_floor, 0, DEFLOOR_RATE * delta)
 	if on_floor != 0:
-		stand_right_up(delta, on_floor)
+		stand_right_up(delta)
+	else:
+		flight_righting(delta)
+	on_floor = move_toward(on_floor, 0, DEFLOOR_RATE * delta)
 
 func handle_gravity(delta: float) -> void:
-	#if total_gravity.length() != 0.0:
-		#up_direction = -total_gravity.normalized()
-	#else:
-		#up_direction = Vector3.UP
-	if true or not is_on_floor():
-		velocity += total_gravity
+	velocity += total_gravity
 
 
 func handle_wing_forces(delta: float) -> void:
@@ -123,19 +137,13 @@ func handle_wing_forces(delta: float) -> void:
 	if dir.length() != 0.0:
 		mult = 0.95 * atmosphere
 	velocity += basis * $Wings/Wing_R.get_wing_force(dir) * mult * delta
-	
 	displacement_velocity += basis * $Wings/Wing_R.get_wing_velocity(dir) * mult * delta
-	# righting
-	var arf := pow((velocity + displacement_velocity*1000.0).length(), 0.2)*0.015
-	righting_force = move_toward(righting_force, MAX_RIGHTING_FORCE, arf * delta)
-	righting_force *= pow((basis*Vector3.DOWN - total_gravity.normalized()).length()+0.7, delta)
-	stand_right_up(delta, righting_force)
-	#print(displacement_velocity)
+
 
 func handle_move_input(delta: float) -> void:
 	var input_dir := input_dir()
 	if input_dir == Vector3.ZERO:
-		if is_on_floor():
+		if on_floor != 0:
 			floor_brake(delta)
 		else:
 			air_brake(delta)
@@ -146,7 +154,7 @@ func handle_move_input(delta: float) -> void:
 	var rotated_amount: float = $SpringArm.rotation.y - temp
 	basis = basis.rotated(basis * Vector3.UP, -rotated_amount)
 	#
-	if is_on_floor():
+	if on_floor != 0:
 		print(acceleration)
 		velocity = lerp(velocity, basis * input_dir * SPEED, acceleration * delta)
 	else:
@@ -156,13 +164,13 @@ func handle_move_input(delta: float) -> void:
 
 func handle_jumping(delta: float) -> void:
 	if Input.is_action_just_pressed("jump"):
-		if on_floor > 0.5:
+		if on_floor != 0:
 			jump()
 		is_wings_raised = false
 		$Wings/Wing_L.set_raised(is_wings_raised)
 		$Wings/Wing_R.set_raised(is_wings_raised)
 	elif Input.is_action_just_released("jump"):
-		if is_on_floor():
+		if on_floor != 0:
 			$Wings/Wing_L.set_tucked(is_wings_tucked)
 			$Wings/Wing_R.set_tucked(is_wings_tucked)
 		else:	
@@ -224,12 +232,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		$SpringArm.rotation.y -= event.relative.x * mouse_sensitivity
 
 # rotate about the feet
-func stand_right_up(delta: float, flooriness: float) -> void:
-	flooriness = pow(flooriness, 2.0)
+func stand_right_up(delta: float) -> void:
 	# basis
 	var forward: Vector3 = transform.basis[2]
 	var down: Vector3 = -up_direction
-	print(down)
 	var right: Vector3 = forward.cross(down).normalized()
 	if down.dot(basis * Vector3.UP) > 0:
 		basis = basis.rotated(Vector3(1, 1, 1).normalized(), 0.01)
@@ -238,13 +244,28 @@ func stand_right_up(delta: float, flooriness: float) -> void:
 	# Create rotation basis
 	var target_basis: Basis = Basis(right, -down, forward).orthonormalized()
 	# rotate the player to the target rotation
-	var mult := 5 * (basis*Vector3.DOWN - down).length() * flooriness
+	var mult := 5 * (basis*Vector3.DOWN - down).length() * on_floor
 	var a := transform.basis[0].move_toward(target_basis[0], mult*delta)
 	var b := transform.basis[1].move_toward(target_basis[1], mult*delta)
 	var c := transform.basis[2].move_toward(target_basis[2], mult*delta)
 	basis = Basis(a, b, c).orthonormalized()
-	#velocity += basis * Vector3.UP * 0.01 * delta
 
+func flight_righting(delta: float) -> void:
+	var forward: Vector3 = transform.basis[2]
+	var down: Vector3 = -up_direction
+	var right: Vector3 = forward.cross(down).normalized()
+	if down.dot(basis * Vector3.UP) > 0:
+		basis = basis.rotated(Vector3(1, 1, 1).normalized(), 0.01)
+	# Recalculate forward to ensure it's orthogonal
+	forward = down.cross(right).normalized()
+	# Create rotation basis
+	var target_basis: Basis = Basis(right, -down, forward).orthonormalized()
+	# rotate the player to the target rotation
+	var mult := 0.5
+	var a := transform.basis[0].move_toward(target_basis[0], mult*delta)
+	var b := transform.basis[1].move_toward(target_basis[1], mult*delta)
+	var c := transform.basis[2].move_toward(target_basis[2], mult*delta)
+	basis = Basis(a, b, c).orthonormalized()
 
 func input_dir() -> Vector3:
 	var input_dir := Vector3.ZERO

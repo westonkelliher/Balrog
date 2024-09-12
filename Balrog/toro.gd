@@ -1,30 +1,25 @@
 @tool
-extends StaticBody3D
+extends Node3D
 
 @export var radius := 1.0 :
 	set(value):
 		radius = value
-		if $Flat == null:
+		if $Mesh == null:
 			return
-		$Flat.mesh.top_radius = value
-		$Flat.mesh.bottom_radius = value
-		#
-		$Edge.mesh.inner_radius = value - height/2.0
-		$Edge.mesh.outer_radius = value + height/2.0
+		$Mesh.mesh.inner_radius = value - thickness
+		$Mesh.mesh.outer_radius = value + thickness
 	get:
 		return radius
 
-@export var height := 1.0 :
+@export var thickness := 0.5 :
 	set(value):
-		height = value
-		if $Flat == null:
+		thickness = value
+		if $Mesh == null:
 			return
-		$Flat.mesh.height = value
-		#
-		$Edge.mesh.inner_radius = radius - value/2.0
-		$Edge.mesh.outer_radius = radius + value/2.0
+		$Mesh.mesh.inner_radius = radius - value
+		$Mesh.mesh.outer_radius = radius + value
 	get:
-		return height
+		return thickness
 
 @export var atmospheric_half_life := 10.0
 @export var gravitational_half_life := 20.0
