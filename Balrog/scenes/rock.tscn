@@ -1,25 +1,28 @@
-[gd_scene load_steps=4 format=3 uid="uid://cpxokwjee1lqw"]
+[gd_scene load_steps=5 format=3 uid="uid://cpxokwjee1lqw"]
 
-[ext_resource type="Script" path="res://scenes/rock.gd" id="1_ibd4c"]
+[ext_resource type="Script" path="res://scripts/rock.gd" id="1_ibd4c"]
 [ext_resource type="PackedScene" uid="uid://ceamsv6m0ig70" path="res://mats/rock.blend" id="1_ic7qd"]
+[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="3_j8yrh"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_mw453"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_qk3yf"]
 radius = 0.3
 
 [node name="Rock" type="RigidBody3D"]
 collision_layer = 4
 collision_mask = 7
+gravity_scale = 0.0
 script = ExtResource("1_ibd4c")
 
-[node name="Shape" type="CollisionShape3D" parent="."]
-shape = SubResource("SphereShape3D_mw453")
-
-[node name="rock" parent="." instance=ExtResource("1_ic7qd")]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
-
 [node name="Timer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 60.0
 one_shot = true
 autostart = true
+
+[node name="BlendMesh" parent="." instance=ExtResource("1_ic7qd")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+
+[node name="FieldCollider" parent="." instance=ExtResource("3_j8yrh")]
+shape = SubResource("SphereShape3D_qk3yf")
+radius = 0.3
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

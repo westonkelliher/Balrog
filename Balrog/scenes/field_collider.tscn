@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://scripts/field_collider.gd" id="1_fnn6c"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_fqgkn"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_chnxm"]
 radius = 1.0
 
 [node name="FieldCollider" type="CollisionShape3D"]
-shape = SubResource("SphereShape3D_fqgkn")
+shape = SubResource("SphereShape3D_chnxm")
 script = ExtResource("1_fnn6c")

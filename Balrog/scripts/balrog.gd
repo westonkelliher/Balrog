@@ -13,7 +13,6 @@ signal throw_rock(rock: Rock)
 var field_colliders: Array[FieldCollider] = []
 var field_bodies: Array[FieldedBody] = []
 var total_gravity := Vector3.ZERO
-var jumping := false
 var on_floor := 0.0
 const DEFLOOR_RATE := 6.0
 
@@ -26,7 +25,7 @@ var last_velocity := Vector3.ZERO
 var righting_force := 0.0
 var MAX_RIGHTING_FORCE := 1.0
 
-const ROCK_IMPULSE := 30.0
+const ROCK_IMPULSE := 25.0
 
 var atmosphere := 1.0
 
@@ -54,14 +53,14 @@ func _physics_process(delta: float) -> void:
 	#print(str(velocity) + "  " + str(displacement_velocity))
 	velocity = velocity + displacement_velocity
 	last_velocity = velocity
-	print("velocity: " + str(velocity))
-	print("on_floor: " + str(on_floor))
+	#print("velocity: " + str(velocity))
+	#print("on_floor: " + str(on_floor))
 	handle_flooriness(delta) # shoudl this be before move_and_slide
-	print("on_floor: " + str(on_floor))
+	#print("on_floor: " + str(on_floor))
 	move_and_slide()
 	if velocity.length() > 0.0:
 		velocity *= (last_velocity - displacement_velocity).length()/last_velocity.length()
-	calculate_floor_clips()
+	#calculate_floor_clips()
 	handle_floor_clips(delta)
 
 func calculate_fields(delta: float) -> void:
@@ -70,7 +69,7 @@ func calculate_fields(delta: float) -> void:
 	var total_weight := 0.0
 	for fb in field_bodies:
 		var signed_distance: float = fb.signed_distance_func.call(global_position)
-		var w:= 1.0/pow(signed_distance, 0.7)
+		var w:= 1.0/pow(abs(signed_distance), 0.7)
 		total_weight += w
 		weights.append(w)
 	for i in weights.size():
@@ -92,13 +91,6 @@ func calculate_fields(delta: float) -> void:
 		var fb := field_bodies[i]
 		atmosphere += fb.atmosphere_func.call(global_position) * weights[i]
 
-func calculate_floor_clips() -> void:
-	floor_clips = []
-	for fb in field_bodies:
-		var signed_distance: float = fb.signed_distance_func.call(global_position)
-		for collider in field_colliders:
-			if signed_distance < collider.radius:
-				floor_clips.append(fb)
 
 func handle_floor_clips(delta: float) -> void:
 	floor_clips = []
@@ -117,7 +109,7 @@ func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> vo
 	velocity -= vel_projection
 	if fc == $FieldCollider:
 		on_floor = 1.0
-	print("floor clip depth: " + str(depth))
+	#print("floor clip depth: " + str(depth))
 		
 
 func handle_flooriness(delta: float) -> void:
@@ -155,7 +147,7 @@ func handle_move_input(delta: float) -> void:
 	basis = basis.rotated(basis * Vector3.UP, -rotated_amount)
 	#
 	if on_floor != 0:
-		print(acceleration)
+		#print(acceleration)
 		velocity = lerp(velocity, basis * input_dir * SPEED, acceleration * delta)
 	else:
 		var brake_amount := air_brake(delta)
@@ -275,6 +267,7 @@ func input_dir() -> Vector3:
 
 func throw_projectile() -> void:
 	var rock := preload("res://scenes/rock.tscn").instantiate()
+	rock.field_bodies = field_bodies
 	rock.position = global_position + basis * Vector3(0.0, 1.5, -1.0)
 	rock.linear_velocity = velocity
 	rock.apply_impulse(basis * Vector3(0.0, 0.02, -1.0)* ROCK_IMPULSE)

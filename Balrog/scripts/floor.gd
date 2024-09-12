@@ -47,8 +47,9 @@ func get_grav(p: Vector3) -> Vector3:
 
 func get_normal(p: Vector3) -> Vector3:
 	var rp = p - global_position # relative position
-	var lateral_component = Vector3(rp.x, 0.0, rp.z)
-	var vertical_component = Vector3(0.0, rp.y, 0.0)
+	var whole_normal := basis * Vector3.UP
+	var vertical_component := rp.dot(whole_normal) * whole_normal # projections
+	var lateral_component = rp - vertical_component
 	if lateral_component.length() < radius:
 		return vertical_component.normalized()
 	else:
@@ -58,8 +59,9 @@ func get_normal(p: Vector3) -> Vector3:
 
 func get_signed_distance(p: Vector3) -> float:
 	var rp = p - global_position # relative position
-	var lateral_component = Vector3(rp.x, 0.0, rp.z)
-	var vertical_component = Vector3(0.0, rp.y, 0.0)
+	var whole_normal := basis * Vector3.UP
+	var vertical_component := rp.dot(whole_normal) * whole_normal # projections
+	var lateral_component = rp - vertical_component
 	if lateral_component.length() < radius:
 		return vertical_component.length() - height/2.0
 	else:
@@ -67,5 +69,5 @@ func get_signed_distance(p: Vector3) -> float:
 		return (rp-edge_point).length() - height/2.0
 
 func get_atmosphere(p: Vector3) -> float:
-	print(get_signed_distance(p))
+	#print(get_signed_distance(p))
 	return atmospheric_half_life / (atmospheric_half_life + get_signed_distance(p))

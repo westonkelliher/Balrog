@@ -15,12 +15,11 @@ material = ExtResource("1_mcbjj")
 inner_radius = 0.2
 outer_radius = 0.5
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_y8vfy"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_x50f2"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_i5fyr"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_rickb"]
 
 [node name="Balrog" type="CharacterBody3D"]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 collision_layer = 2
 floor_stop_on_slope = false
 floor_max_angle = 1.5708
@@ -56,10 +55,10 @@ mesh = SubResource("TorusMesh_w81dx")
 
 [node name="FieldCollider" parent="." instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-shape = SubResource("SphereShape3D_y8vfy")
+shape = SubResource("SphereShape3D_x50f2")
 radius = 0.5
 
 [node name="FieldCollider2" parent="." instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-shape = SubResource("SphereShape3D_i5fyr")
+shape = SubResource("SphereShape3D_rickb")
 radius = 0.5
