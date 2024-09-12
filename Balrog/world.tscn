@@ -1,7 +1,60 @@
-[gd_scene load_steps=2 format=3 uid="uid://dlx7e2n3h26ry"]
+[gd_scene load_steps=8 format=3 uid="uid://b186mi50onc02"]
 
-[ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://balrog.tscn" id="1_widdy"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_h32kv"]
+[ext_resource type="PackedScene" uid="uid://smisv57hy4qv" path="res://scenes/floor.tscn" id="1_upqis"]
+[ext_resource type="PackedScene" uid="uid://c0t02vm8wimey" path="res://scenes/globe.tscn" id="2_k2nb1"]
+[ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="3_23wry"]
+[ext_resource type="PackedScene" uid="uid://cm4fhsehrir3t" path="res://scenes/noob.tscn" id="5_ar0v1"]
+
+[sub_resource type="Environment" id="Environment_oh4jk"]
+background_mode = 1
+background_color = Color(0.3256, 0.629493, 0.74, 1)
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_r2k83"]
 
 [node name="World" type="Node3D"]
+script = ExtResource("1_h32kv")
 
-[node name="Balrog" parent="." instance=ExtResource("1_widdy")]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_oh4jk")
+camera_attributes = SubResource("CameraAttributesPractical_r2k83")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.998256, 0.0152775, 0.0570163, -0.0590276, 0.258368, 0.964242, 0, -0.965926, 0.258819, 278.958, 449.193, -288.149)
+shadow_enabled = true
+shadow_opacity = 0.5
+shadow_blur = 5.0
+
+[node name="Balrog" parent="." instance=ExtResource("3_23wry")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -33.187, 14.7522, 1.79158)
+
+[node name="Objects" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.7522, 0)
+
+[node name="Noob" parent="Objects" instance=ExtResource("5_ar0v1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.1859, 7.87804, 0)
+
+[node name="Noob2" parent="Objects" instance=ExtResource("5_ar0v1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.8044, 7.87804, 0)
+
+[node name="Noob3" parent="Objects" instance=ExtResource("5_ar0v1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.8804, 7.87804, -5.38808)
+
+[node name="FieldBodies" type="Node3D" parent="."]
+
+[node name="Floor" parent="FieldBodies" instance=ExtResource("1_upqis")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 11.7522, 0)
+
+[node name="Globe" parent="FieldBodies" instance=ExtResource("2_k2nb1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.4902, 0, 0)
+
+[node name="Globe2" parent="FieldBodies" instance=ExtResource("2_k2nb1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -294.598, 70, -87.451)
+
+[node name="Floor2" parent="FieldBodies" instance=ExtResource("1_upqis")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -221.08, -73.1544, 177.714)
+height = 50.0
+
+[connection signal="throw_rock" from="Balrog" to="." method="_on_balrog_throw_rock"]
