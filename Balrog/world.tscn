@@ -48,6 +48,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -53.8804, 22.7984, -5.38808)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 11.7522, 0)
 radius = 100.0
 height = 3.0
+base_gravity = 25.0
 
 [node name="Globe" parent="FieldBodies" instance=ExtResource("2_k2nb1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41.4902, 0, 0)
@@ -63,11 +64,12 @@ radius = 50.0
 height = 40.0
 
 [node name="Floor3" parent="FieldBodies" instance=ExtResource("1_upqis")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78.5491, 21.3748, 4.19085)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -78.5491, -2.24411, 4.19085)
 radius = 8.0
 height = 2.0
 atmospheric_half_life = 5.0
 gravitational_half_life = 5.0
+base_gravity = 25.0
 
 [node name="Toro" parent="FieldBodies" instance=ExtResource("6_cuylb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 155.128, 63.6045, -134.812)
@@ -89,7 +91,7 @@ atmospheric_half_life = 10.0
 gravitational_half_life = 10.0
 
 [node name="Globe3" parent="FieldBodies" instance=ExtResource("2_k2nb1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -105.108, -9.90883, 34.691)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -105.108, 25.6223, 34.691)
 radius = 10.0
 atmospheric_half_life = 5.0
 gravitational_half_life = 10.0

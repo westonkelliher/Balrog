@@ -26,7 +26,8 @@ var last_velocity := Vector3.ZERO
 var righting_force := 0.0
 var MAX_RIGHTING_FORCE := 1.0
 
-const ROCK_IMPULSE := 25.0
+const ROCK_IMPULSE := 70.0 # multiplied by seconds
+var throw_charge := 0.0
 
 var atmosphere := 1.0
 
@@ -47,7 +48,7 @@ func _physics_process(delta: float) -> void:
 	handle_move_input(delta)
 	handle_jumping(delta)
 	handle_wing_forces(delta)
-	handle_misc_input()
+	handle_misc_input(delta)
 	#
 	#print(basis)
 	rotation_speed = 4
@@ -71,7 +72,7 @@ func calculate_fields(delta: float) -> void:
 	for fb in field_bodies:
 		var signed_distance: float = fb.signed_distance_func.call(global_position)
 		var grav: float = fb.gravity_func.call(global_position).length()
-		var w:= grav/pow(abs(signed_distance), 0.7)
+		var w:= grav/pow(abs(signed_distance), 0.9)
 		total_weight += w
 		weights.append(w)
 	for i in weights.size():
@@ -80,7 +81,7 @@ func calculate_fields(delta: float) -> void:
 	total_gravity = Vector3.ZERO
 	for i in field_bodies.size():
 		var fb := field_bodies[i]
-		total_gravity += fb.gravity_func.call(global_position) * weights[i] * delta
+		total_gravity += fb.gravity_func.call(global_position) * weights[i]
 	# up direction
 	var up_d := Vector3.ZERO
 	for i in field_bodies.size():
@@ -142,14 +143,14 @@ func handle_flooriness(delta: float) -> void:
 	on_floor = move_toward(on_floor, 0, DEFLOOR_RATE * delta)
 
 func handle_gravity(delta: float) -> void:
-	velocity += total_gravity
+	velocity += total_gravity * delta
 
 
 func handle_wing_forces(delta: float) -> void:
 	var dir := input_dir()
-	var mult := 1.5 * atmosphere
+	var mult := 2.5 * atmosphere
 	if dir.length() != 0.0:
-		mult = 0.95 * atmosphere
+		mult = 1.6 * atmosphere
 	velocity += basis * $Wings/Wing_R.get_wing_force(dir) * mult * delta
 	displacement_velocity += basis * $Wings/Wing_R.get_wing_velocity(dir) * mult * delta
 
@@ -225,13 +226,15 @@ func air_brake(delta: float) -> float:
 	#velocity = lerp(velocity, Vector3.ZERO, 1.0 * delta)
 
 
-func handle_misc_input() -> void:
+func handle_misc_input(delta: float) -> void:
 	if Input.is_action_just_pressed("wing_tuck"):
 		print("x")
 		is_wings_tucked = ! is_wings_tucked
 		$Wings/Wing_L.set_tucked(is_wings_tucked)
 		$Wings/Wing_R.set_tucked(is_wings_tucked)
-	if Input.is_action_just_pressed("throw"):
+	if Input.is_action_pressed("throw"):
+		throw_charge += delta
+	if Input.is_action_just_released("throw"):
 		throw_projectile()
 	if Input.is_action_just_pressed("run"):
 		acceleration = 10.0
@@ -278,6 +281,8 @@ func flight_righting(delta: float) -> void:
 	var target_basis: Basis = Basis(right, -down, forward).orthonormalized()
 	# rotate the player to the target rotation
 	var mult := pow((basis*Vector3.DOWN - down).length() + 0.1, 0.5) * 1.0
+	mult *= pow(total_gravity.length(), 0.5)*0.2
+	print(total_gravity.length())
 	var a := transform.basis[0].move_toward(target_basis[0], mult*delta)
 	var b := transform.basis[1].move_toward(target_basis[1], mult*delta)
 	var c := transform.basis[2].move_toward(target_basis[2], mult*delta)
@@ -292,7 +297,8 @@ func input_dir() -> Vector3:
 func throw_projectile() -> void:
 	var rock := preload("res://scenes/rock.tscn").instantiate()
 	rock.field_bodies = field_bodies
-	rock.position = global_position + basis * Vector3(0.0, 1.5, -1.0)
+	rock.position = global_position + $CamPivot/SpringArm.global_basis * Vector3(0.0, 2.5, -1.0)
 	rock.linear_velocity = velocity
-	rock.apply_impulse(basis * Vector3(0.0, 0.02, -1.0)* ROCK_IMPULSE)
+	rock.apply_impulse($CamPivot/SpringArm.global_basis * Vector3(0.0, 0.3, -1.0)* ROCK_IMPULSE * throw_charge)
+	throw_charge = 0.0
 	throw_rock.emit(rock)
