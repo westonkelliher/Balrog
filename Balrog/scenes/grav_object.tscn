@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://grav_object.gd" id="1_bcv1k"]
 
-[node name="GravObject" type="Area3D"]
+[node name="FieldedObject" type="Area3D"]
 collision_mask = 2
 script = ExtResource("1_bcv1k")
 

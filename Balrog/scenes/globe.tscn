@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://c0t02vm8wimey"]
+
+[ext_resource type="Material" uid="uid://gge1nkc5bfx0" path="res://mats/grass.tres" id="1_c8dl1"]
+[ext_resource type="Script" path="res://scripts/globe.gd" id="1_r650x"]
+[ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/grav_object.tscn" id="2_p5evs"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ucw8n"]
+radius = 50.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_cy1ar"]
+material = ExtResource("1_c8dl1")
+radius = 50.0
+height = 100.0
+radial_segments = 256
+rings = 128
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1uvea"]
+radius = 400.0
+
+[node name="Globe" type="StaticBody3D"]
+script = ExtResource("1_r650x")
+radius = 50.0
+atmospheric_half_life = 100.0
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ucw8n")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_cy1ar")
+
+[node name="GravObject" parent="." instance=ExtResource("2_p5evs")]
+gravity_func = Callable()
+normal_func = Callable()
+signed_distance_func = Callable()
+atmosphere_func = Callable()
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GravObject"]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("SphereShape3D_1uvea")

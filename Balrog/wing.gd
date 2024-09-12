@@ -1,1 +1,0 @@
-../BalrogController/wing.gd
