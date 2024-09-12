@@ -23,6 +23,7 @@ extends Node3D
 
 @export var atmospheric_half_life := 10.0
 @export var gravitational_half_life := 20.0
+@export var base_gravity := 9.8 * 2.0
 
 func _ready() -> void:
 	$GravObject.gravity_func = get_grav
@@ -36,7 +37,7 @@ func _ready() -> void:
 
 func get_grav(p: Vector3) -> Vector3:
 	var mult := gravitational_half_life / (gravitational_half_life + get_signed_distance(p))
-	return -get_normal(p) * 9.8 * 1.5
+	return -get_normal(p) * mult * base_gravity
 		
 
 func get_normal(p: Vector3) -> Vector3:

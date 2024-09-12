@@ -15,6 +15,7 @@ var field_bodies: Array[FieldedBody] = []
 var total_gravity := Vector3.ZERO
 var on_floor := 0.0
 const DEFLOOR_RATE := 6.0
+const GROUND_STICK := 0.4 # measured in seconds (multiplied by gravity)
 
 var is_wings_tucked := true
 var is_wings_raised := false
@@ -53,7 +54,7 @@ func _physics_process(delta: float) -> void:
 	#print(str(velocity) + "  " + str(displacement_velocity))
 	velocity = velocity + displacement_velocity
 	last_velocity = velocity
-	#print("velocity: " + str(velocity))
+	print("velocity: " + str(velocity))
 	#print("on_floor: " + str(on_floor))
 	handle_flooriness(delta) # shoudl this be before move_and_slide
 	#print("on_floor: " + str(on_floor))
@@ -69,7 +70,8 @@ func calculate_fields(delta: float) -> void:
 	var total_weight := 0.0
 	for fb in field_bodies:
 		var signed_distance: float = fb.signed_distance_func.call(global_position)
-		var w:= 1.0/pow(abs(signed_distance), 0.7)
+		var grav: float = fb.gravity_func.call(global_position).length()
+		var w:= grav/pow(abs(signed_distance), 0.7)
 		total_weight += w
 		weights.append(w)
 	for i in weights.size():
@@ -99,15 +101,35 @@ func handle_floor_clips(delta: float) -> void:
 			var signed_distance: float = fb.signed_distance_func.call(collider.global_position)
 			if signed_distance < collider.radius:
 				handle_a_floor_clip(delta, fb, collider)
+		handle_camera_clip(fb, delta)
 
+func handle_camera_clip(fb: FieldedBody, delta: float) -> void:
+	var cam := $CamPivot/SpringArm/Q/Camera3D
+	var cam_fc := $CamPivot/SpringArm/Q/Camera3D/FieldCollider
+	var signed_distance: float = fb.signed_distance_func.call(cam_fc.global_position)
+	if signed_distance > cam_fc.radius:
+		var a: Vector3 = cam.position
+		cam.position *= pow(0.4, delta)
+		return
+	var normal: Vector3 = fb.normal_func.call(global_position)
+	var depth = cam_fc.radius - signed_distance
+	#while signed_distance < cam_fc.radius # 0:
+	#$SpringArm.spring_length
+	cam.position += Vector3.FORWARD*(depth*0.5 + 0.01)
+	print("cam: " + str(cam.position))
+	signed_distance = fb.signed_distance_func.call(cam_fc.global_position)
+	
 func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> void:
-	var signed_distance: float = fb.signed_distance_func.call(fc.global_position)
-	var normal: Vector3 = fb.normal_func.call(fc.global_position)
-	var depth = fc.radius - signed_distance
-	position += normal*depth
-	var vel_projection := velocity.dot(normal) * normal
-	velocity -= vel_projection
+	#var signed_distance: float = fb.signed_distance_func.call(fc.global_position)
+	#var normal: Vector3 = fb.normal_func.call(fc.global_position)
+	#var depth = fc.radius - signed_distance
+	#position += normal*depth
+	#var vel_projection := velocity.dot(normal) * normal
+	#velocity -= vel_projection
+	fc.handle_fieldedbody_collision(fb)
 	if fc == $FieldCollider:
+		if on_floor == 0:
+			land()
 		on_floor = 1.0
 	#print("floor clip depth: " + str(depth))
 		
@@ -141,9 +163,9 @@ func handle_move_input(delta: float) -> void:
 			air_brake(delta)
 		return
 	#
-	var temp: float = $SpringArm.rotation.y
-	$SpringArm.rotation.y = lerp_angle($SpringArm.rotation.y, 0.0, rotation_speed * delta)
-	var rotated_amount: float = $SpringArm.rotation.y - temp
+	var temp: float = $CamPivot.rotation.y
+	$CamPivot.rotation.y = lerp_angle($CamPivot.rotation.y, 0.0, rotation_speed * delta)
+	var rotated_amount: float = $CamPivot.rotation.y - temp
 	basis = basis.rotated(basis * Vector3.UP, -rotated_amount)
 	#
 	if on_floor != 0:
@@ -177,6 +199,8 @@ func handle_jumping(delta: float) -> void:
 
 
 func jump() -> void:
+	var vel_projection: Vector3 = velocity.dot(up_direction) * up_direction
+	velocity -= vel_projection
 	velocity += basis * Vector3.UP * jump_speed
 	on_floor = 0.0
 
@@ -219,9 +243,9 @@ func handle_misc_input() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
-		$SpringArm.rotation.x -= event.relative.y * mouse_sensitivity
-		$SpringArm.rotation_degrees.x = clamp($SpringArm.rotation_degrees.x, -90.0, 30.0)
-		$SpringArm.rotation.y -= event.relative.x * mouse_sensitivity
+		$CamPivot/SpringArm.rotation.x -= event.relative.y * mouse_sensitivity
+		$CamPivot/SpringArm.rotation_degrees.x = clamp($CamPivot/SpringArm.rotation_degrees.x, -90.0, 80.0)
+		$CamPivot.rotation.y -= event.relative.x * mouse_sensitivity
 
 # rotate about the feet
 func stand_right_up(delta: float) -> void:
@@ -253,7 +277,7 @@ func flight_righting(delta: float) -> void:
 	# Create rotation basis
 	var target_basis: Basis = Basis(right, -down, forward).orthonormalized()
 	# rotate the player to the target rotation
-	var mult := 0.5
+	var mult := pow((basis*Vector3.DOWN - down).length() + 0.1, 0.5) * 1.0
 	var a := transform.basis[0].move_toward(target_basis[0], mult*delta)
 	var b := transform.basis[1].move_toward(target_basis[1], mult*delta)
 	var c := transform.basis[2].move_toward(target_basis[2], mult*delta)

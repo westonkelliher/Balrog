@@ -1,11 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://cpxokwjee1lqw"]
+[gd_scene load_steps=6 format=3 uid="uid://cpxokwjee1lqw"]
 
 [ext_resource type="Script" path="res://scripts/rock.gd" id="1_ibd4c"]
 [ext_resource type="PackedScene" uid="uid://ceamsv6m0ig70" path="res://mats/rock.blend" id="1_ic7qd"]
 [ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="3_j8yrh"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_qk3yf"]
-radius = 0.3
+[sub_resource type="SphereShape3D" id="SphereShape3D_cclp5"]
+radius = 0.6
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_i8fdw"]
+radius = 0.6
 
 [node name="Rock" type="RigidBody3D"]
 collision_layer = 4
@@ -19,10 +22,15 @@ one_shot = true
 autostart = true
 
 [node name="BlendMesh" parent="." instance=ExtResource("1_ic7qd")]
-transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 
-[node name="FieldCollider" parent="." instance=ExtResource("3_j8yrh")]
-shape = SubResource("SphereShape3D_qk3yf")
-radius = 0.3
+[node name="FieldCollider" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("3_j8yrh")]
+shape = SubResource("SphereShape3D_cclp5")
+radius = 0.6
+ground_stick = 0.0
+parent_body = NodePath("..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_i8fdw")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

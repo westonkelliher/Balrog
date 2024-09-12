@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://s0rqbbcto6nw"]
+[gd_scene load_steps=6 format=3 uid="uid://s0rqbbcto6nw"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_6bwxh"]
 [ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="1_jynrh"]
@@ -11,10 +11,6 @@ ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_energy = 0.2
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_db0h4"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_a2dah"]
-radius = 27.0
-height = 40.0
 
 [node name="TestWorldToro" type="Node3D"]
 script = ExtResource("1_6bwxh")
@@ -34,14 +30,11 @@ transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 92.6853, 29.9668, 20.18
 
 [node name="Toro" parent="." instance=ExtResource("3_ue320")]
 transform = Transform3D(0.909324, 0.389815, -0.145513, -0.352675, 0.907645, 0.227597, 0.220795, -0.155641, 0.962822, 0, 0, 0)
-radius = 100.0
+radius = 70.0
 thickness = 25.0
 atmospheric_half_life = 100.0
 gravitational_half_life = 50.0
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Toro"]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -100, 0, 0)
-mesh = SubResource("SphereMesh_a2dah")
+base_gravity = null
 
 [node name="Objects" type="Node3D" parent="."]
 

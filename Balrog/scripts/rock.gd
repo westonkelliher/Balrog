@@ -10,10 +10,10 @@ func _ready() -> void:
 	field_colliders.append($FieldCollider)
 
 func _physics_process(delta: float) -> void:
-	print(field_bodies)
+	#print(field_bodies)
 	calculate_fields(delta)
 	handle_floor_clips(delta)
-	print(total_gravity)
+	#print(total_gravity)
 	apply_force(total_gravity)
 	#move_and_collide(linear_velocity)
 
@@ -55,7 +55,7 @@ func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> vo
 	var vel_projection := linear_velocity.dot(normal) * normal
 	linear_velocity -= vel_projection
 	linear_velocity *= pow(0.8, delta)
-	print("clip: " + str(depth))
+	#print("clip: " + str(depth))
 
 
 func _on_timer_timeout() -> void:

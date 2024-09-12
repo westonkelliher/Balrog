@@ -6,7 +6,7 @@ var bodies := []
 @export var normal_func: Callable = default_get_normal
 @export var signed_distance_func: Callable = default_get_signed_distance
 @export var atmosphere_func: Callable = default_get_atmosphere
-
+#@export var base_gravity: float = 9.8
 
 
 func default_get_gravity(p: Vector3) -> Vector3:
