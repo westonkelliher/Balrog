@@ -16,6 +16,7 @@ inner_radius = 0.3
 outer_radius = 0.525
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_efqtx"]
+radius = 1.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_f5b23"]
 
@@ -63,7 +64,6 @@ fov = 70.0
 
 [node name="FieldCollider" parent="CamPivot/SpringArm/Q/Camera3D" node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 shape = SubResource("SphereShape3D_efqtx")
-radius = 0.5
 ground_stick = 0.0
 parent_body = NodePath("..")
 
