@@ -21,6 +21,12 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("5"):
 		$Balrog.position = $Marks/Mark5.global_position
 		$Balrog.rotation = $Marks/Mark5.global_rotation
+	if Input.is_action_just_pressed("6"):
+		$Balrog.position = $Marks/Mark6.global_position
+		$Balrog.rotation = $Marks/Mark6.global_rotation
+	if Input.is_action_just_pressed("7"):
+		$Balrog.position = $Marks/Mark7.global_position
+		$Balrog.rotation = $Marks/Mark7.global_rotation
 		
 
 func _input(event: InputEvent) -> void:
