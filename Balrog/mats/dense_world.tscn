@@ -1,0 +1,356 @@
+[gd_scene load_steps=7 format=3 uid="uid://4y6xfayria88"]
+
+[ext_resource type="Script" path="res://scripts/world.gd" id="1_i6iqf"]
+[ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="2_t3dmr"]
+[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/FieldBodies/toro.tscn" id="3_nn6h7"]
+[ext_resource type="PackedScene" uid="uid://c0t02vm8wimey" path="res://scenes/FieldBodies/globe.tscn" id="4_717nu"]
+
+[sub_resource type="Environment" id="Environment_s6gll"]
+background_mode = 1
+background_color = Color(0.3256, 0.629493, 0.74, 1)
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_vgwdg"]
+
+[node name="DenseWorld" type="Node3D"]
+script = ExtResource("1_i6iqf")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_s6gll")
+camera_attributes = SubResource("CameraAttributesPractical_vgwdg")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.998256, 0.0152775, 0.0570163, -0.0590276, 0.258368, 0.964242, 0, -0.965926, 0.258819, 278.958, 449.193, -288.149)
+shadow_enabled = true
+shadow_opacity = 0.5
+shadow_blur = 5.0
+
+[node name="Balrog" parent="." instance=ExtResource("2_t3dmr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 67.9391, 52.4845, 4.23817)
+WALK_SPEED = 5.0
+RUN_SPEED = 9.0
+GROUND_ACC = 20.0
+JUMP_SPEED = 6.0
+WING_MULT = 1.0
+
+[node name="Objects" type="Node3D" parent="."]
+
+[node name="FieldBodies" type="Node3D" parent="."]
+
+[node name="Chain1" type="Node3D" parent="FieldBodies"]
+
+[node name="Toro" parent="FieldBodies/Chain1" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain1" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain1" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain1" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain1" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain1" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Chain2" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 48)
+
+[node name="Toro" parent="FieldBodies/Chain2" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain2" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain2" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain2" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain2" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain2" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Chain3" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 0, 48)
+
+[node name="Toro" parent="FieldBodies/Chain3" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain3" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain3" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain3" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain3" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain3" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Chain4" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, 0, 0)
+
+[node name="Toro" parent="FieldBodies/Chain4" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain4" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain4" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain4" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain4" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain4" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Chain5" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -48, 0)
+
+[node name="Toro" parent="FieldBodies/Chain5" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain5" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain5" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain5" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain5" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain5" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Chain6" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -48, 48)
+
+[node name="Toro" parent="FieldBodies/Chain6" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain6" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain6" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain6" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain6" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain6" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Chain7" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, -48, 48)
+
+[node name="Toro" parent="FieldBodies/Chain7" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain7" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain7" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain7" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain7" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain7" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Chain8" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48, -48, 0)
+
+[node name="Toro" parent="FieldBodies/Chain8" instance=ExtResource("3_nn6h7")]
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro2" parent="FieldBodies/Chain8" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro3" parent="FieldBodies/Chain8" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 24, 0, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro4" parent="FieldBodies/Chain8" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro5" parent="FieldBodies/Chain8" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 24, 24, 0)
+radius = 12.0
+thickness = 4.0
+
+[node name="Toro6" parent="FieldBodies/Chain8" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 24, -24)
+radius = 12.0
+thickness = 4.0
+
+[node name="Group" type="Node3D" parent="FieldBodies"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -95, 0, 0)
+
+[node name="Toro" parent="FieldBodies/Group" instance=ExtResource("3_nn6h7")]
+radius = 30.0
+thickness = 12.0
+
+[node name="Toro2" parent="FieldBodies/Group" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(0.839696, 0.543057, 0, -0.543057, 0.839696, 0, 0, 0, 1, -49.1318, 14.3652, 0)
+radius = 23.0
+thickness = 10.0
+
+[node name="Toro2" parent="FieldBodies/Group/Toro2" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(0.839696, 0.543057, 0, -0.543057, 0.839696, 0, 0, 0, 1, -49.1318, 14.3652, 0)
+radius = 23.0
+thickness = 10.0
+
+[node name="Toro2" parent="FieldBodies/Group/Toro2/Toro2" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(0.839696, 0.543057, 0, -0.543057, 0.839696, 0, 0, 0, 1, -49.1318, 14.3652, 0)
+radius = 23.0
+thickness = 10.0
+
+[node name="Toro3" parent="FieldBodies/Group" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, -0.147257, -0.989098, 0, 0.989098, -0.147257, -85.2593, 126.553, 2.39384)
+radius = 23.0
+thickness = 6.0
+
+[node name="Toro4" parent="FieldBodies/Group" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(0.173952, 0.1125, -0.978307, -0.9114, -0.35785, -0.203206, -0.372948, 0.926977, 0.0402838, -46.8584, 14.3652, -139.689)
+radius = 23.0
+thickness = 10.0
+
+[node name="Toro2" parent="FieldBodies/Group/Toro4" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(0.839696, 0.543057, 0, -0.543057, 0.839696, 0, 0, 0, 1, -49.1318, 14.3652, 0)
+radius = 23.0
+thickness = 10.0
+
+[node name="Globe" parent="FieldBodies/Group" instance=ExtResource("4_717nu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.5488, 12.1259, -80.8168)
+radius = 25.0
+base_gravity = 19.6
+
+[node name="Globe2" parent="FieldBodies/Group" instance=ExtResource("4_717nu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39.7818, 77.1608, -88.2861)
+radius = 15.0
+base_gravity = 19.6
+
+[node name="Globe3" parent="FieldBodies/Group" instance=ExtResource("4_717nu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.6322, 83.3095, -20.9579)
+radius = 10.0
+base_gravity = 19.6
+
+[node name="Toro2" parent="FieldBodies/Group/Globe3" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 14.0798, 0)
+radius = 23.0
+thickness = 5.0
+
+[node name="Toro3" parent="FieldBodies/Group/Globe3" instance=ExtResource("3_nn6h7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -13.5991, 0)
+radius = 23.0
+thickness = 5.0
