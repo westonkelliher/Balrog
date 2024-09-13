@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_6bwxh"]
 [ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="1_jynrh"]
-[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/toro.tscn" id="3_ue320"]
+[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/FieldBodies/toro.tscn" id="3_ue320"]
 
 [sub_resource type="Environment" id="Environment_a0an1"]
 background_mode = 1

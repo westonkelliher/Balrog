@@ -94,12 +94,12 @@ func get_internal_normal(p: Vector3) -> Vector3:
 	return (near_weight*near_normal + inner_weight*inner_normal) / (near_weight + inner_weight)
 
 func get_signed_distance(p: Vector3) -> float:
-	var rp = p - global_position # relative position
+	var rp := p - global_position # relative position
 	return get_relative_signed_distance(rp)
 
 func get_relative_signed_distance(rp: Vector3) -> float:
-	var lateral_component = get_lateral_component(rp)
-	var lateral_center = lateral_component.normalized() * radius
+	var lateral_component := get_lateral_component(rp)
+	var lateral_center := lateral_component.normalized() * radius
 	return (rp-lateral_center).length() - thickness
 
 func get_atmosphere(p: Vector3) -> float:
@@ -108,5 +108,5 @@ func get_atmosphere(p: Vector3) -> float:
 func get_lateral_component(rp: Vector3) -> Vector3:
 	var whole_normal := basis * Vector3.UP
 	var vertical_component := rp.dot(whole_normal) * whole_normal # projections
-	var lateral_component = rp - vertical_component
+	var lateral_component := rp - vertical_component
 	return lateral_component

@@ -50,7 +50,7 @@ func handle_floor_clips(delta: float) -> void:
 func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> void:
 	var signed_distance: float = fb.signed_distance_func.call(fc.global_position)
 	var normal: Vector3 = fb.normal_func.call(fc.global_position)
-	var depth = fc.radius - signed_distance
+	var depth := fc.radius - signed_distance
 	position += normal*depth
 	var vel_projection := linear_velocity.dot(normal) * normal
 	linear_velocity -= vel_projection

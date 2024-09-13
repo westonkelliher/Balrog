@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ceamsv6m0ig70" path="res://mats/rock.blend" id="1_ic7qd"]
 [ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="3_j8yrh"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_cclp5"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_od7gh"]
 radius = 0.6
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_i8fdw"]
@@ -12,7 +12,7 @@ radius = 0.6
 
 [node name="Rock" type="RigidBody3D"]
 collision_layer = 4
-collision_mask = 7
+collision_mask = 5
 gravity_scale = 0.0
 script = ExtResource("1_ibd4c")
 
@@ -25,7 +25,7 @@ autostart = true
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 
 [node name="FieldCollider" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("3_j8yrh")]
-shape = SubResource("SphereShape3D_cclp5")
+shape = SubResource("SphereShape3D_od7gh")
 radius = 0.6
 ground_stick = 0.0
 parent_body = NodePath("..")

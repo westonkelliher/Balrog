@@ -4,11 +4,17 @@ class_name Balrog
 signal throw_rock(rock: Rock)
 
 @export var mouse_sensitivity := 0.0055
-@export var rotation_speed := 12.0
+@export var rotation_speed := 4.0
 
-@export var SPEED := 7.0
-@export var acceleration := 2.0
-@export var jump_speed := 5.0
+@export var WALK_SPEED := 2.0
+@export var RUN_SPEED := 4.0
+var speed := WALK_SPEED
+
+
+@export var GROUND_ACC := 2.0
+@export var AIR_ACC := 2.0
+@export var JUMP_SPEED := 5.0
+@export var WING_MULT := 2.5
 
 var field_colliders: Array[FieldCollider] = []
 var field_bodies: Array[FieldedBody] = []
@@ -50,12 +56,12 @@ func _physics_process(delta: float) -> void:
 	handle_wing_forces(delta)
 	handle_misc_input(delta)
 	#
-	#print(basis)
-	rotation_speed = 4
+	#print(on_floor)
+	#
 	#print(str(velocity) + "  " + str(displacement_velocity))
 	velocity = velocity + displacement_velocity
 	last_velocity = velocity
-	print("velocity: " + str(velocity))
+	#print("velocity: " + str(velocity))
 	#print("on_floor: " + str(on_floor))
 	handle_flooriness(delta) # shoudl this be before move_and_slide
 	#print("on_floor: " + str(on_floor))
@@ -113,7 +119,7 @@ func handle_camera_clip(fb: FieldedBody, delta: float) -> void:
 		cam.position *= pow(0.4, delta)
 		return
 	var normal: Vector3 = fb.normal_func.call(global_position)
-	var depth = cam_fc.radius - signed_distance
+	var depth: float = cam_fc.radius - signed_distance
 	#while signed_distance < cam_fc.radius # 0:
 	#$SpringArm.spring_length
 	cam.position += Vector3.FORWARD*(depth*0.5 + 0.01)
@@ -148,9 +154,9 @@ func handle_gravity(delta: float) -> void:
 
 func handle_wing_forces(delta: float) -> void:
 	var dir := input_dir()
-	var mult := 2.5 * atmosphere
+	var mult := WING_MULT * atmosphere
 	if dir.length() != 0.0:
-		mult = 1.6 * atmosphere
+		mult = .64 * WING_MULT * atmosphere
 	velocity += basis * $Wings/Wing_R.get_wing_force(dir) * mult * delta
 	displacement_velocity += basis * $Wings/Wing_R.get_wing_velocity(dir) * mult * delta
 
@@ -171,14 +177,19 @@ func handle_move_input(delta: float) -> void:
 	#
 	if on_floor != 0:
 		#print(acceleration)
-		velocity = lerp(velocity, basis * input_dir * SPEED, acceleration * delta)
+		velocity = lerp(velocity, basis * input_dir * speed, GROUND_ACC * delta)
 	else:
 		var brake_amount := air_brake(delta)
-		velocity += basis * input_dir * acceleration * delta
+		velocity += basis * input_dir * AIR_ACC * delta
 		velocity += basis * input_dir * brake_amount*0.5
 
 func handle_jumping(delta: float) -> void:
+	if is_on_floor():
+		if on_floor == 0.0:
+			land()
+		on_floor = 1.0
 	if Input.is_action_just_pressed("jump"):
+		print("a " + str(on_floor))
 		if on_floor != 0:
 			jump()
 		is_wings_raised = false
@@ -193,7 +204,7 @@ func handle_jumping(delta: float) -> void:
 			$Wings/Wing_L.set_raised(is_wings_raised)
 			$Wings/Wing_R.set_raised(is_wings_raised)
 	elif Input.is_action_just_pressed("comedown"):
-		velocity -= basis * Vector3.UP * jump_speed
+		velocity -= basis * Vector3.UP * JUMP_SPEED
 		is_wings_raised = false
 		$Wings/Wing_L.set_raised(is_wings_raised)
 		$Wings/Wing_R.set_raised(is_wings_raised)
@@ -202,10 +213,11 @@ func handle_jumping(delta: float) -> void:
 func jump() -> void:
 	var vel_projection: Vector3 = velocity.dot(up_direction) * up_direction
 	velocity -= vel_projection
-	velocity += basis * Vector3.UP * jump_speed
+	velocity += basis * Vector3.UP * JUMP_SPEED
 	on_floor = 0.0
 
 func land() -> void:
+	print("landed")
 	$Wings/Wing_L.set_tucked(is_wings_tucked)
 	$Wings/Wing_R.set_tucked(is_wings_tucked)
 	on_floor = 1.0
@@ -213,7 +225,7 @@ func land() -> void:
 
 func floor_brake(delta: float) -> void:
 	velocity *= pow(0.5, delta)
-	velocity = lerp(velocity, Vector3.ZERO, acceleration * delta)
+	velocity = lerp(velocity, Vector3.ZERO, GROUND_ACC * delta)
 
 func air_brake(delta: float) -> float:
 	var temp := velocity.length()
@@ -221,7 +233,7 @@ func air_brake(delta: float) -> float:
 	var extra_break := pow(abs(wing_speed), 0.3)*0.12
 	extra_break = min(0.65, extra_break)
 	#print("extra break: " + str(extra_break))
-	velocity *= pow(0.8-extra_break, delta)
+	velocity *= pow(0.85-extra_break, delta)
 	return temp - velocity.length()
 	#velocity = lerp(velocity, Vector3.ZERO, 1.0 * delta)
 
@@ -237,11 +249,9 @@ func handle_misc_input(delta: float) -> void:
 	if Input.is_action_just_released("throw"):
 		throw_projectile()
 	if Input.is_action_just_pressed("run"):
-		acceleration = 10.0
-		SPEED = 17.0
+		speed = RUN_SPEED
 	if Input.is_action_just_released("run"):
-		acceleration = 2.0
-		SPEED = 7.0
+		speed = WALK_SPEED
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -282,7 +292,7 @@ func flight_righting(delta: float) -> void:
 	# rotate the player to the target rotation
 	var mult := pow((basis*Vector3.DOWN - down).length() + 0.1, 0.5) * 1.0
 	mult *= pow(total_gravity.length(), 0.5)*0.2
-	print(total_gravity.length())
+	#print(total_gravity.length())
 	var a := transform.basis[0].move_toward(target_basis[0], mult*delta)
 	var b := transform.basis[1].move_toward(target_basis[1], mult*delta)
 	var c := transform.basis[2].move_toward(target_basis[2], mult*delta)

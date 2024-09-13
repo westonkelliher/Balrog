@@ -21,7 +21,7 @@ func _ready() -> void:
 func handle_fieldedbody_collision(fb: FieldedBody) -> void:
 	var signed_distance: float = fb.signed_distance_func.call(global_position)
 	var normal: Vector3 = fb.normal_func.call(global_position)
-	var depth = radius - signed_distance
+	var depth := radius - signed_distance
 	parent_body.position += normal*depth # TODO: torque
 	var vel_projection: Vector3 = parent_body.velocity.dot(normal) * normal
 	parent_body.velocity -= vel_projection

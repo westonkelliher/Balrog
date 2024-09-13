@@ -47,10 +47,10 @@ func get_grav(p: Vector3) -> Vector3:
 		
 
 func get_normal(p: Vector3) -> Vector3:
-	var rp = p - global_position # relative position
+	var rp := p - global_position # relative position
 	var whole_normal := basis * Vector3.UP
 	var vertical_component := rp.dot(whole_normal) * whole_normal # projections
-	var lateral_component = rp - vertical_component
+	var lateral_component := rp - vertical_component
 	if lateral_component.length() < radius:
 		return vertical_component.normalized()
 	else:
@@ -59,10 +59,10 @@ func get_normal(p: Vector3) -> Vector3:
 		# TODO: maybe (prob not) lerp between radial and downward when wanear edge (outside of it tho)
 
 func get_signed_distance(p: Vector3) -> float:
-	var rp = p - global_position # relative position
+	var rp := p - global_position # relative position
 	var whole_normal := basis * Vector3.UP
 	var vertical_component := rp.dot(whole_normal) * whole_normal # projections
-	var lateral_component = rp - vertical_component
+	var lateral_component := rp - vertical_component
 	if lateral_component.length() < radius:
 		return vertical_component.length() - height/2.0
 	else:

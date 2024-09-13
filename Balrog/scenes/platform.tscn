@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cqms0yj6puw88"]
+
+[ext_resource type="Material" uid="uid://d0ejynma0qbn5" path="res://mats/riz.tres" id="1_eowwo"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hlr2h"]
+height = 0.5
+radius = 3.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_i24if"]
+material = ExtResource("1_eowwo")
+top_radius = 3.0
+bottom_radius = 3.0
+height = 0.5
+
+[node name="Platform" type="StaticBody3D"]
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_hlr2h")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_i24if")

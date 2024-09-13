@@ -1,0 +1,123 @@
+[gd_scene load_steps=8 format=3 uid="uid://cbbrb8gl5e5cm"]
+
+[ext_resource type="Script" path="res://platform_world.gd" id="1_v8t0l"]
+[ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="1_wx2pg"]
+[ext_resource type="PackedScene" uid="uid://bv0go7ahmo24" path="res://scenes/ramp.tscn" id="2_uh4dy"]
+[ext_resource type="PackedScene" uid="uid://smisv57hy4qv" path="res://scenes/FieldBodies/floor.tscn" id="4_vdjo4"]
+[ext_resource type="PackedScene" uid="uid://cqms0yj6puw88" path="res://scenes/platform.tscn" id="5_7dfgn"]
+
+[sub_resource type="Environment" id="Environment_p5v6d"]
+background_mode = 1
+background_color = Color(0.3256, 0.629493, 0.74, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.901961, 0.960784, 1, 1)
+ambient_light_energy = 0.2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ct8ns"]
+
+[node name="PlatformWorld" type="Node3D"]
+script = ExtResource("1_v8t0l")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_p5v6d")
+camera_attributes = SubResource("CameraAttributesPractical_ct8ns")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(0.998256, 0.0152775, 0.0570163, 0.011089, -0.997265, 0.0730675, 0.0579767, -0.0723077, -0.995696, 249.9, 449.193, -288.149)
+shadow_enabled = true
+shadow_opacity = 0.5
+shadow_blur = 5.0
+
+[node name="Balrog" parent="." instance=ExtResource("1_wx2pg")]
+transform = Transform3D(0.48696, 0, -0.873424, 0, 1, 0, 0.873424, 0, 0.48696, -49.4533, 1, -20.1089)
+wall_min_slide_angle = 0.785398
+floor_max_angle = 1.0472
+WALK_SPEED = 5.0
+RUN_SPEED = 9.0
+GROUND_ACC = 10.0
+WING_MULT = 0.4
+
+[node name="FieldedBodies" type="Node3D" parent="."]
+
+[node name="Floor" parent="FieldedBodies" instance=ExtResource("4_vdjo4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4, 0)
+radius = 70.0
+height = 8.0
+atmospheric_half_life = 100.0
+gravitational_half_life = 100.0
+base_gravity = 9.8
+
+[node name="Floor2" parent="FieldedBodies" instance=ExtResource("4_vdjo4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.5393, 14.1975, 40.8372)
+radius = 8.0
+height = 3.0
+atmospheric_half_life = 10.0
+gravitational_half_life = 10.0
+base_gravity = 8.0
+
+[node name="Floor3" parent="FieldedBodies" instance=ExtResource("4_vdjo4")]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -18.648, 25.1318, 43.1944)
+radius = 8.0
+height = 3.0
+atmospheric_half_life = 10.0
+gravitational_half_life = 10.0
+base_gravity = 8.0
+
+[node name="Platforms" type="Node3D" parent="."]
+transform = Transform3D(0.873424, 0, 0.486961, 0, 1, 0, -0.486961, 0, 0.873424, -23.1727, 0, -34.7612)
+
+[node name="Ramp" parent="Platforms" instance=ExtResource("2_uh4dy")]
+transform = Transform3D(-1.31134e-07, 0, -3, 0, 3, 0, 3, 0, -1.31134e-07, -19.0892, 0, 0)
+
+[node name="Platform" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.00073, 3, 0)
+
+[node name="Platform2" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8353, 4.29852, 0)
+
+[node name="Platform3" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.2348, 6.72612, 0)
+
+[node name="Ramp2" parent="Platforms" instance=ExtResource("2_uh4dy")]
+transform = Transform3D(-1.92836, 0, 2.29813, 0, 2, 0, -2.29813, 0, -1.92836, 43.4978, 3.60939, 18.1396)
+
+[node name="Ramp3" parent="Platforms" instance=ExtResource("2_uh4dy")]
+transform = Transform3D(-2.59808, 0, 1.5, 0, 2, 0, -1.5, 0, -2.59808, 46.7827, 7.44184, 31.3444)
+
+[node name="Platform4" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.9563, 3, 65.5098)
+
+[node name="Ramp4" parent="Platforms" instance=ExtResource("2_uh4dy")]
+transform = Transform3D(1.28222, 0, 2.71218, 0, 2, 0, -2.71218, 0, 1.28222, 74.5482, 1.4823, 73.8819)
+
+[node name="Platform5" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 68.0799, -16.1575, 70.9489)
+
+[node name="Platform6" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 49.5487, 10.712, 65.7407)
+
+[node name="Platform7" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.35998, 11.1436, 86.5904)
+
+[node name="Platform8" parent="Platforms" instance=ExtResource("5_7dfgn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.2136, -21.7684, 80.3634)
+
+[node name="Marks" type="Node3D" parent="."]
+transform = Transform3D(0.873424, 0, 0.486961, 0, 1, 0, -0.486961, 0, 0.873424, -23.1727, 0, -34.7612)
+
+[node name="Mark1" type="Marker3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.0892, 1, 0)
+
+[node name="Mark2" type="Marker3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.00908, 12.7886, 87.2427)
+
+[node name="Mark3" type="Marker3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.12, 6.28198, 18.1121)
+
+[node name="Mark4" type="Marker3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55.841, 4.34459, 65.8625)
+
+[node name="Mark5" type="Marker3D" parent="Marks"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.74228e-08, 0, -8.74228e-08, -1, 67.9689, -18.0667, 70.8093)
+
+[connection signal="throw_rock" from="Balrog" to="." method="_on_balrog_throw_rock"]

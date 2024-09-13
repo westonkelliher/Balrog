@@ -30,11 +30,11 @@ func get_grav(p: Vector3) -> Vector3:
 		
 
 func get_normal(p: Vector3) -> Vector3:
-	var rp = p - global_position # relative position
+	var rp := p - global_position # relative position
 	return rp.normalized()
 
 func get_signed_distance(p: Vector3) -> float:
-	var rp = p - global_position # relative position
+	var rp := p - global_position # relative position
 	return rp.length() - radius
 
 func get_atmosphere(p: Vector3) -> float:

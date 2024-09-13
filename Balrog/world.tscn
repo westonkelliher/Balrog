@@ -1,11 +1,11 @@
 [gd_scene load_steps=9 format=3 uid="uid://b186mi50onc02"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_h32kv"]
-[ext_resource type="PackedScene" uid="uid://smisv57hy4qv" path="res://scenes/floor.tscn" id="1_upqis"]
-[ext_resource type="PackedScene" uid="uid://c0t02vm8wimey" path="res://scenes/globe.tscn" id="2_k2nb1"]
+[ext_resource type="PackedScene" uid="uid://smisv57hy4qv" path="res://scenes/FieldBodies/floor.tscn" id="1_upqis"]
+[ext_resource type="PackedScene" uid="uid://c0t02vm8wimey" path="res://scenes/FieldBodies/globe.tscn" id="2_k2nb1"]
 [ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="3_23wry"]
 [ext_resource type="PackedScene" uid="uid://cm4fhsehrir3t" path="res://scenes/noob.tscn" id="5_ar0v1"]
-[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/toro.tscn" id="6_cuylb"]
+[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/FieldBodies/toro.tscn" id="6_cuylb"]
 
 [sub_resource type="Environment" id="Environment_oh4jk"]
 background_mode = 1
@@ -72,7 +72,7 @@ gravitational_half_life = 5.0
 base_gravity = 25.0
 
 [node name="Toro" parent="FieldBodies" instance=ExtResource("6_cuylb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 155.128, 63.6045, -134.812)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125.745, 63.6045, -134.812)
 radius = 50.0
 thickness = 15.0
 
