@@ -1,10 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://c8dk41e3poig1"]
+[gd_scene load_steps=15 format=3 uid="uid://c8dk41e3poig1"]
 
 [ext_resource type="Script" path="res://scripts/balrog.gd" id="1_ecelo"]
 [ext_resource type="Material" uid="uid://dj8c8abta0f7j" path="res://mats/black.tres" id="1_mcbjj"]
 [ext_resource type="PackedScene" uid="uid://dossusm1hrl70" path="res://scenes/wing.tscn" id="1_q2pr5"]
 [ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="4_633lb"]
 [ext_resource type="Texture2D" uid="uid://brksc7wgetnlu" path="res://images/crosshair.png" id="5_hv76l"]
+[ext_resource type="PackedScene" uid="uid://bmkcdsuvspncr" path="res://utils/charge_bar.tscn" id="6_x6jld"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g13f3"]
 
@@ -16,16 +17,21 @@ material = ExtResource("1_mcbjj")
 inner_radius = 0.3
 outer_radius = 0.525
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_eqeqs"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_62aut"]
+albedo_color = Color(0.352941, 0.352941, 0.352941, 0.207843)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ovoqe"]
+material = SubResource("StandardMaterial3D_62aut")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_e3aw7"]
 radius = 1.0
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_cls3h"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_0g3h2"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_8m5wn"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_tyx4a"]
 
 [node name="Balrog" type="CharacterBody3D"]
 collision_layer = 2
-collision_mask = 5
 floor_block_on_wall = false
 script = ExtResource("1_ecelo")
 
@@ -38,8 +44,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 mesh = SubResource("CapsuleMesh_emnp0")
 
 [node name="Head" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -1.14437, 0.820122, 0, -1.64024, -0.572189, 0, 1.72554, -0.229409)
+transform = Transform3D(0.9, 0, 0, 0, -1.29118, 0.790418, 0, -2.37126, -0.430393, 0, 1.55247, -0.390007)
 mesh = SubResource("TorusMesh_w81dx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, -0.05, 0)
+mesh = SubResource("SphereMesh_ovoqe")
 
 [node name="Wings" type="Node3D" parent="."]
 transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 0, 1.4, 0.45)
@@ -64,20 +74,20 @@ margin = 0.05
 fov = 70.0
 
 [node name="FieldCollider" parent="CamPivot/SpringArm/Q/Camera3D" node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
-shape = SubResource("SphereShape3D_eqeqs")
+shape = SubResource("SphereShape3D_e3aw7")
 ground_stick = 0.0
 parent_body = NodePath("..")
 
 [node name="FieldCollider" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-shape = SubResource("SphereShape3D_cls3h")
+shape = SubResource("SphereShape3D_0g3h2")
 radius = 0.5
 ground_stick = 1.5
 parent_body = NodePath("..")
 
 [node name="FieldCollider2" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-shape = SubResource("SphereShape3D_8m5wn")
+shape = SubResource("SphereShape3D_tyx4a")
 radius = 0.5
 ground_stick = 0.0
 parent_body = NodePath("..")
@@ -96,3 +106,9 @@ mouse_filter = 2
 
 [node name="Sprite" type="Sprite2D" parent="CrossHair"]
 texture = ExtResource("5_hv76l")
+
+[node name="ChargeBarL" parent="." instance=ExtResource("6_x6jld")]
+position = Vector2(659, 578)
+
+[node name="ChargeBarR" parent="." instance=ExtResource("6_x6jld")]
+position = Vector2(981, 577)

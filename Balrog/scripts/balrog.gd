@@ -16,6 +16,8 @@ var speed := WALK_SPEED
 @export var JUMP_SPEED := 5.0
 @export var WING_MULT := 2.5
 
+@onready var CAMERA := $CamPivot/SpringArm/Q/Camera3D
+
 var field_colliders: Array[FieldCollider] = []
 var field_bodies: Array[FieldedBody] = []
 var total_gravity := Vector3.ZERO
@@ -51,8 +53,24 @@ func _ready() -> void:
 	$Wings/Wing_R.set_tucked(is_wings_tucked)
 
 func _process(delta: float) -> void:
-	pass
-	
+	if $ChargeBarL.visible:
+		var screen_size: Vector2 = get_viewport().size
+		var world_point := global_position + global_basis * Vector3(-2.5, 0.0, 0.0)
+		var screen_point: Vector2 = CAMERA.unproject_position(world_point) + Vector2(250.0, -150.0)
+		screen_point.y = (screen_point.y + screen_size.y*1.6)/3.0
+		screen_point.y = clamp(screen_point.y,  screen_size.y*0.3, screen_size.y*0.7)
+		screen_point.x = (screen_point.x + screen_size.x*0.3)/2.0
+		screen_point.x = clamp(screen_point.x, screen_size.x*0.3, screen_size.x*0.7)
+		$ChargeBarL.position = screen_point
+	if $ChargeBarR.visible:
+		var screen_size: Vector2 = get_viewport().size
+		var world_point := global_position + global_basis * Vector3(2.5, 0.0, 0.0)
+		var screen_point: Vector2 = CAMERA.unproject_position(world_point) + Vector2(-250.0, -150.0)
+		screen_point.y = (screen_point.y + screen_size.y*1.6)/3.0
+		screen_point.y = clamp(screen_point.y,  screen_size.y*0.3, screen_size.y*0.7)
+		screen_point.x = (screen_point.x + screen_size.x*0.7)/2.0
+		screen_point.x = clamp(screen_point.x, screen_size.x*0.3, screen_size.x*0.7)
+		$ChargeBarR.position = screen_point
 
 func _physics_process(delta: float) -> void:
 	displacement_velocity = Vector3.ZERO
@@ -118,18 +136,17 @@ func handle_floor_clips(delta: float) -> void:
 		handle_camera_clip(fb, delta)
 
 func handle_camera_clip(fb: FieldedBody, delta: float) -> void:
-	var cam := $CamPivot/SpringArm/Q/Camera3D
 	var cam_fc := $CamPivot/SpringArm/Q/Camera3D/FieldCollider
 	var signed_distance: float = fb.signed_distance_func.call(cam_fc.global_position)
 	if signed_distance > cam_fc.radius:
-		var a: Vector3 = cam.position
-		cam.position *= pow(0.4, delta)
+		var a: Vector3 = CAMERA.position
+		CAMERA.position *= pow(0.4, delta)
 		return
 	var normal: Vector3 = fb.normal_func.call(global_position)
 	var depth: float = cam_fc.radius - signed_distance
 	#while signed_distance < cam_fc.radius # 0:
 	#$SpringArm.spring_length
-	cam.position += Vector3.FORWARD*(depth*0.5 + 0.01)
+	CAMERA.position += Vector3.FORWARD*(depth*0.5 + 0.01)
 	#print("cam: " + str(cam.position))
 	signed_distance = fb.signed_distance_func.call(cam_fc.global_position)
 	
@@ -177,10 +194,7 @@ func handle_move_input(delta: float) -> void:
 			air_brake(delta)
 		return
 	#
-	var temp: float = $CamPivot.rotation.y
-	$CamPivot.rotation.y = lerp_angle($CamPivot.rotation.y, 0.0, rotation_speed * delta)
-	var rotated_amount: float = $CamPivot.rotation.y - temp
-	basis = basis.rotated(basis * Vector3.UP, -rotated_amount)
+	turn_toward_camera(delta)
 	#
 	if on_floor != 0:
 		#print(acceleration)
@@ -228,7 +242,14 @@ func land() -> void:
 	$Wings/Wing_L.set_tucked(is_wings_tucked)
 	$Wings/Wing_R.set_tucked(is_wings_tucked)
 	on_floor = 1.0
-	
+
+
+func turn_toward_camera(delta: float) -> void:
+	var temp: float = $CamPivot.rotation.y
+	$CamPivot.rotation.y = lerp_angle($CamPivot.rotation.y, 0.0, rotation_speed * delta)
+	var rotated_amount: float = $CamPivot.rotation.y - temp
+	basis = basis.rotated(basis * Vector3.UP, -rotated_amount)
+
 
 func floor_brake(delta: float) -> void:
 	velocity *= pow(0.5, delta)
@@ -251,15 +272,30 @@ func handle_misc_input(delta: float) -> void:
 		is_wings_tucked = ! is_wings_tucked
 		$Wings/Wing_L.set_tucked(is_wings_tucked)
 		$Wings/Wing_R.set_tucked(is_wings_tucked)
-	if Input.is_action_pressed("left_use") and left_throw_charge < 1.0:
-		left_throw_charge += delta/ROCK_CHARGE_TIME
-	if Input.is_action_just_released("left_use"):
+	#
+	var using := false
+	if Input.is_action_pressed("left_use"):
+		if left_throw_charge < 1.0:
+			left_throw_charge += delta/ROCK_CHARGE_TIME
+			$ChargeBarL.set_progress(left_throw_charge)
+		using = true
+		$ChargeBarL.visible = true
+	elif Input.is_action_just_released("left_use"):
 		throw_projectile(false)
-	if Input.is_action_pressed("right_use") and right_throw_charge < 1.0:
-		right_throw_charge += delta/ROCK_CHARGE_TIME
-	if Input.is_action_just_released("right_use"):
+		$ChargeBarL.visible = false
+	if Input.is_action_pressed("right_use"):
+		if right_throw_charge < 1.0:
+			right_throw_charge += delta/ROCK_CHARGE_TIME
+			$ChargeBarR.set_progress(right_throw_charge)
+		using = true
+		$ChargeBarR.visible = true
+	elif Input.is_action_just_released("right_use"):
 		throw_projectile(true)
-	if Input.is_action_just_pressed("run"):
+		$ChargeBarR.visible = false
+	if using:
+		turn_toward_camera(delta)
+	#
+	elif Input.is_action_just_pressed("run"):
 		speed = RUN_SPEED
 	if Input.is_action_just_released("run"):
 		speed = WALK_SPEED
@@ -330,14 +366,14 @@ func throw_projectile(is_right: bool) -> void:
 		charge = right_throw_charge
 	var impulse := MIN_ROCK_IMPULSE + (MAX_ROCK_IMPULSE-MIN_ROCK_IMPULSE) * charge;
 	var start_d := throw_start_direction(rock.position);
-	print(start_d)
 	var targ_d := throw_target_direction()
-	print(targ_d)
 	rock.start_throw(impulse, start_d, targ_d)
 	if is_right:
 		right_throw_charge = 0.0
+		$ChargeBarR.set_progress(right_throw_charge)
 	else:
 		left_throw_charge = 0.0
+		$ChargeBarL.set_progress(left_throw_charge)
 	throw_rock.emit(rock)
 
 func throw_target_direction() -> Vector3:
@@ -348,7 +384,5 @@ func throw_target_direction() -> Vector3:
 	
 func throw_start_direction(start_pos: Vector3) -> Vector3:
 	var start_targ: Vector3 = global_position + $CamPivot/SpringArm.global_basis * Vector3(0.0, 2.5, -3.0)
-	#print(start_pos)
-	#print(start_targ)
 	return (start_targ - start_pos).normalized()
 	

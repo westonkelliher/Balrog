@@ -36,6 +36,8 @@ WING_MULT = 0.5
 [node name="Ramp" parent="Objects" instance=ExtResource("4_exocp")]
 transform = Transform3D(1.02271, 0, 2.82029, 0, 3, 0, -2.82029, 0, 1.02271, 0, 1.98077, 0)
 
+[node name="Rocks" type="Node3D" parent="Objects"]
+
 [node name="Node3D" type="Node3D" parent="."]
 
 [node name="Toro" parent="Node3D" instance=ExtResource("3_3okrx")]

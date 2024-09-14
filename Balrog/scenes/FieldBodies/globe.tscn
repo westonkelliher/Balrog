@@ -4,15 +4,15 @@
 [ext_resource type="Script" path="res://scripts/globe.gd" id="1_r650x"]
 [ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/fielded_body.tscn" id="2_p5evs"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_u44fa"]
+[sub_resource type="SphereMesh" id="SphereMesh_u476s"]
 material = ExtResource("1_c8dl1")
-radius = 15.0
-height = 30.0
+radius = 50.0
+height = 100.0
 radial_segments = 128
 rings = 64
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_1uvea"]
-radius = 45.0
+radius = 150.0
 
 [node name="Globe" type="StaticBody3D"]
 script = ExtResource("1_r650x")
@@ -21,7 +21,7 @@ atmospheric_half_life = 30.0
 gravitational_half_life = 50.0
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_u44fa")
+mesh = SubResource("SphereMesh_u476s")
 
 [node name="GravObject" parent="." instance=ExtResource("2_p5evs")]
 gravity_func = Callable()
