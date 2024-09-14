@@ -15,4 +15,6 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_balrog_throw_rock(rock: Rock) -> void:
-	$Objects.add_child(rock)
+	$Objects/Rocks.add_child(rock)
+	if $Objects/Rocks.get_children().size() > 20:
+		$Objects/Rocks.get_child(0).queue_free()

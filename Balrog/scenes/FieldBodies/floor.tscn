@@ -8,18 +8,17 @@
 material = ExtResource("1_flcqi")
 top_radius = 30.0
 bottom_radius = 30.0
-height = 3.0
 rings = 0
 
 [sub_resource type="TorusMesh" id="TorusMesh_n06rb"]
 material = ExtResource("1_flcqi")
-inner_radius = 28.5
-outer_radius = 31.5
+inner_radius = 19.0
+outer_radius = 21.0
 ring_segments = 16
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_r6fy6"]
-height = 180.0
-radius = 90.0
+height = 120.0
+radius = 60.0
 
 [node name="Floor" type="StaticBody3D"]
 collision_mask = 6

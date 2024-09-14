@@ -7,21 +7,21 @@
 
 [sub_resource type="TorusMesh" id="TorusMesh_ymrkn"]
 material = ExtResource("1_fbye4")
-inner_radius = 35.0
-outer_radius = 65.0
+inner_radius = 171.0
+outer_radius = 199.0
 rings = 128
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bx3d2"]
-height = 390.0
-radius = 195.0
+height = 1194.0
+radius = 597.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_0q2kb"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iv02n"]
 render_priority = 0
 shader = ExtResource("4_u16qp")
-shader_parameter/thickness = 0.3
+shader_parameter/thickness = 0.0756757
 
 [sub_resource type="BoxMesh" id="BoxMesh_4vv0w"]
-material = SubResource("ShaderMaterial_0q2kb")
+material = SubResource("ShaderMaterial_iv02n")
 size = Vector3(4, 4, 4)
 
 [node name="Toro" type="Node3D"]

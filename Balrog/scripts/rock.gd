@@ -5,6 +5,8 @@ var field_colliders: Array[FieldCollider] = []
 var field_bodies: Array[FieldedBody] = []
 var total_gravity := Vector3.ZERO
 
+var grav_mult := 2.5
+
 var target_direction := Vector3.ZERO
 
 func _ready() -> void:
@@ -28,7 +30,8 @@ func apply_redirect() -> void:
 	#assert()
 	var mult := pow(linear_velocity.length(), 2.0)*0.3
 	apply_force(perp_proj*mult)
-	apply_force(-total_gravity*0.8)
+	var grav_resistance: float = 0.4 + 0.5*($RedirectTimer.time_left / $RedirectTimer.wait_time)
+	apply_force(-total_gravity * grav_resistance)
 
 func calculate_fields(delta: float) -> void:
 	# calculate weights
@@ -46,6 +49,7 @@ func calculate_fields(delta: float) -> void:
 	for i in field_bodies.size():
 		var fb := field_bodies[i]
 		total_gravity += fb.gravity_func.call(global_position) * weights[i]
+	total_gravity *= grav_mult
 	# up direction
 	var up_d := Vector3.ZERO
 	for i in field_bodies.size():

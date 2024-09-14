@@ -36,6 +36,8 @@ WING_MULT = 1.5
 
 [node name="Objects" type="Node3D" parent="."]
 
+[node name="Rocks" type="Node3D" parent="Objects"]
+
 [node name="FieldBodies" type="Node3D" parent="."]
 
 [node name="Group" type="Node3D" parent="FieldBodies"]
