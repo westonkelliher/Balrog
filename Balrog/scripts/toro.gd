@@ -1,13 +1,14 @@
 @tool
 extends Node3D
 
-@export var radius := 2.0 :
+@export var radius := 1.0 :
 	set(value):
 		radius = value
 		if $Mesh == null:
 			return
 		$Mesh.mesh.inner_radius = value - thickness
 		$Mesh.mesh.outer_radius = value + thickness
+		$Box.scale = Vector3.ONE*value
 	get:
 		return radius
 
@@ -18,6 +19,7 @@ extends Node3D
 			return
 		$Mesh.mesh.inner_radius = radius - value
 		$Mesh.mesh.outer_radius = radius + value
+		$Box.mesh.material.set_shader_parameter("thickness", value/radius)
 	get:
 		return thickness
 
@@ -32,8 +34,12 @@ func _ready() -> void:
 	$GravObject.atmosphere_func = get_atmosphere
 	#
 	$Mesh.mesh = $Mesh.mesh.duplicate()
+	$Box.mesh.material = $Box.mesh.material.duplicate()
 	radius = radius
 	thickness = thickness
+	#
+	$GravObject/Shape.shape.height = (radius+thickness) * 6
+	$GravObject/Shape.shape.radius = (radius+thickness) * 3
 
 func get_grav(p: Vector3) -> Vector3:
 	var rp := p - global_position # relative positionvar lateral_component = rp - vertical_component

@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://ceamsv6m0ig70" path="res://mats/rock.blend" id="1_ic7qd"]
 [ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="3_j8yrh"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_od7gh"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_k555y"]
 radius = 0.6
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_i8fdw"]
@@ -16,7 +16,7 @@ collision_mask = 5
 gravity_scale = 0.0
 script = ExtResource("1_ibd4c")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="LiveTimer" type="Timer" parent="."]
 wait_time = 60.0
 one_shot = true
 autostart = true
@@ -25,7 +25,7 @@ autostart = true
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 
 [node name="FieldCollider" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("3_j8yrh")]
-shape = SubResource("SphereShape3D_od7gh")
+shape = SubResource("SphereShape3D_k555y")
 radius = 0.6
 ground_stick = 0.0
 parent_body = NodePath("..")
@@ -33,4 +33,12 @@ parent_body = NodePath("..")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_i8fdw")
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[node name="RedirectTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
+
+[connection signal="timeout" from="LiveTimer" to="." method="_on_live_timer_timeout"]
+[connection signal="timeout" from="RedirectTimer" to="." method="_on_redirect_timer_timeout"]

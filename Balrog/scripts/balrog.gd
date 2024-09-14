@@ -6,12 +6,12 @@ signal throw_rock(rock: Rock)
 @export var mouse_sensitivity := 0.0055
 @export var rotation_speed := 4.0
 
-@export var WALK_SPEED := 2.0
-@export var RUN_SPEED := 4.0
+@export var WALK_SPEED := 5.0
+@export var RUN_SPEED := 10.0
 var speed := WALK_SPEED
 
 
-@export var GROUND_ACC := 2.0
+@export var GROUND_ACC := 20.0
 @export var AIR_ACC := 2.0
 @export var JUMP_SPEED := 5.0
 @export var WING_MULT := 2.5
@@ -32,8 +32,11 @@ var last_velocity := Vector3.ZERO
 var righting_force := 0.0
 var MAX_RIGHTING_FORCE := 1.0
 
-const ROCK_IMPULSE := 70.0 # multiplied by seconds
-var throw_charge := 0.0
+const MAX_ROCK_IMPULSE := 50.0
+const MIN_ROCK_IMPULSE := 5.0
+const ROCK_CHARGE_TIME := 1.5 # 
+var left_throw_charge := 0.0
+var right_throw_charge := 0.0
 
 var atmosphere := 1.0
 
@@ -46,6 +49,10 @@ func _ready() -> void:
 	#
 	$Wings/Wing_L.set_tucked(is_wings_tucked)
 	$Wings/Wing_R.set_tucked(is_wings_tucked)
+
+func _process(delta: float) -> void:
+	pass
+	
 
 func _physics_process(delta: float) -> void:
 	displacement_velocity = Vector3.ZERO
@@ -123,7 +130,7 @@ func handle_camera_clip(fb: FieldedBody, delta: float) -> void:
 	#while signed_distance < cam_fc.radius # 0:
 	#$SpringArm.spring_length
 	cam.position += Vector3.FORWARD*(depth*0.5 + 0.01)
-	print("cam: " + str(cam.position))
+	#print("cam: " + str(cam.position))
 	signed_distance = fb.signed_distance_func.call(cam_fc.global_position)
 	
 func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> void:
@@ -244,10 +251,14 @@ func handle_misc_input(delta: float) -> void:
 		is_wings_tucked = ! is_wings_tucked
 		$Wings/Wing_L.set_tucked(is_wings_tucked)
 		$Wings/Wing_R.set_tucked(is_wings_tucked)
-	if Input.is_action_pressed("throw"):
-		throw_charge += delta
-	if Input.is_action_just_released("throw"):
-		throw_projectile()
+	if Input.is_action_pressed("left_use") and left_throw_charge < 1.0:
+		left_throw_charge += delta/ROCK_CHARGE_TIME
+	if Input.is_action_just_released("left_use"):
+		throw_projectile(false)
+	if Input.is_action_pressed("right_use") and right_throw_charge < 1.0:
+		right_throw_charge += delta/ROCK_CHARGE_TIME
+	if Input.is_action_just_released("right_use"):
+		throw_projectile(true)
 	if Input.is_action_just_pressed("run"):
 		speed = RUN_SPEED
 	if Input.is_action_just_released("run"):
@@ -257,6 +268,8 @@ func handle_misc_input(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		$CamPivot/SpringArm.rotation.x -= event.relative.y * mouse_sensitivity
+		$CrossHair/Sprite.position.y = $CamPivot/SpringArm.rotation.x * 150.0
+		#$CamPivot/SpringArm.rotation.x = 0
 		$CamPivot/SpringArm.rotation_degrees.x = clamp($CamPivot/SpringArm.rotation_degrees.x, -90.0, 80.0)
 		$CamPivot.rotation.y -= event.relative.x * mouse_sensitivity
 
@@ -304,11 +317,38 @@ func input_dir() -> Vector3:
 	input_dir.z = Input.get_action_strength("back") - Input.get_action_strength("forward")
 	return input_dir.normalized()
 
-func throw_projectile() -> void:
+func throw_projectile(is_right: bool) -> void:
 	var rock := preload("res://scenes/rock.tscn").instantiate()
 	rock.field_bodies = field_bodies
-	rock.position = global_position + $CamPivot/SpringArm.global_basis * Vector3(0.0, 2.5, -1.0)
+	var rock_start := Vector3(-2.5, 0.0, 0.0)
+	if is_right:
+		rock_start = Vector3(2.5, 0.0, 0.0)
+	rock.position = global_position + global_basis * rock_start
 	rock.linear_velocity = velocity
-	rock.apply_impulse($CamPivot/SpringArm.global_basis * Vector3(0.0, 0.3, -1.0)* ROCK_IMPULSE * throw_charge)
-	throw_charge = 0.0
+	var charge := left_throw_charge
+	if is_right:
+		charge = right_throw_charge
+	var impulse := MIN_ROCK_IMPULSE + (MAX_ROCK_IMPULSE-MIN_ROCK_IMPULSE) * charge;
+	var start_d := throw_start_direction(rock.position);
+	print(start_d)
+	var targ_d := throw_target_direction()
+	print(targ_d)
+	rock.start_throw(impulse, start_d, targ_d)
+	if is_right:
+		right_throw_charge = 0.0
+	else:
+		left_throw_charge = 0.0
 	throw_rock.emit(rock)
+
+func throw_target_direction() -> Vector3:
+	var d: Vector3 = Vector3.FORWARD
+	d = d.rotated(Vector3.RIGHT, +0.07 -$CamPivot/SpringArm.rotation.x*0.2)
+	d = $CamPivot/SpringArm.global_basis * d
+	return d
+	
+func throw_start_direction(start_pos: Vector3) -> Vector3:
+	var start_targ: Vector3 = global_position + $CamPivot/SpringArm.global_basis * Vector3(0.0, 2.5, -3.0)
+	#print(start_pos)
+	#print(start_targ)
+	return (start_targ - start_pos).normalized()
+	

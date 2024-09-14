@@ -40,6 +40,10 @@ func _ready() -> void:
 	$Edge.mesh = $Edge.mesh.duplicate()
 	radius = radius
 	height = height
+	#
+	$GravObject/Shape.shape.height = radius * 6
+	$GravObject/Shape.shape.radius = radius * 3
+	
 
 func get_grav(p: Vector3) -> Vector3:
 	var mult := gravitational_half_life / (gravitational_half_life + get_signed_distance(p))

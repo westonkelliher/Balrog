@@ -5,17 +5,30 @@ var field_colliders: Array[FieldCollider] = []
 var field_bodies: Array[FieldedBody] = []
 var total_gravity := Vector3.ZERO
 
+var target_direction := Vector3.ZERO
 
 func _ready() -> void:
 	field_colliders.append($FieldCollider)
 
 func _physics_process(delta: float) -> void:
-	#print(field_bodies)
 	calculate_fields(delta)
+	if $RedirectTimer.time_left > 0.0:
+		apply_redirect()
+	#print(field_bodies)
 	handle_floor_clips(delta)
 	#print(total_gravity)
 	apply_force(total_gravity)
 	#move_and_collide(linear_velocity)
+
+func apply_redirect() -> void:
+	var current_dir := linear_velocity.normalized()
+	var proj := target_direction.dot(current_dir.normalized()) * current_dir
+	var perp_proj := target_direction - proj
+	$RayCast3D.target_position = perp_proj
+	#assert()
+	var mult := pow(linear_velocity.length(), 2.0)*0.3
+	apply_force(perp_proj*mult)
+	apply_force(-total_gravity*0.8)
 
 func calculate_fields(delta: float) -> void:
 	# calculate weights
@@ -48,15 +61,31 @@ func handle_floor_clips(delta: float) -> void:
 				handle_a_floor_clip(delta, fb, collider)
 
 func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> void:
+	var rt := $RedirectTimer
+	#print(str(rt.is_stopped()) and rt.time_left > rt.wait_time)
+	#print(str(rt.time_left) + " " + str(rt.wait_time))
+	#if rt.time_left > rt.wait_time*0.25:
+		#return
+	#
 	var signed_distance: float = fb.signed_distance_func.call(fc.global_position)
 	var normal: Vector3 = fb.normal_func.call(fc.global_position)
 	var depth := fc.radius - signed_distance
 	position += normal*depth
-	var vel_projection := linear_velocity.dot(normal) * normal
-	linear_velocity -= vel_projection
+	var dot := linear_velocity.dot(normal)
+	if dot < 0.0:
+		var vel_projection := linear_velocity.dot(normal) * normal
+		linear_velocity -= vel_projection
 	linear_velocity *= pow(0.8, delta)
 	#print("clip: " + str(depth))
 
 
-func _on_timer_timeout() -> void:
+func _on_live_timer_timeout() -> void:
 	queue_free()
+
+func start_throw(impulse: float, start_d: Vector3, targ_d: Vector3) -> void:
+	#apply_impulse(start_d * impulse)
+	target_direction = targ_d
+	linear_velocity += start_d * impulse / mass
+	$RedirectTimer.wait_time = 10.0 / linear_velocity.length() # 5 comes from ~length*2 of start targ position
+	print($RedirectTimer.wait_time)
+	$RedirectTimer.start()
