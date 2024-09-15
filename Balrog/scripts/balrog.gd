@@ -35,7 +35,7 @@ var righting_force := 0.0
 var MAX_RIGHTING_FORCE := 1.0
 
 const MAX_ROCK_IMPULSE := 50.0 # this is the impulse at mass = 1 ...
-const MIN_ROCK_IMPULSE := 5.0  # but will be multiplied by sqrt(mass)
+const MIN_ROCK_IMPULSE := 5.0  # but will 0.35be multiplied by sqrt(mass)
 const MAX_ROCK_MASS := 30.0
 const MIN_ROCK_MASS := 0.5
 const ROCK_CHARGE_TIME := 1.5 # 
@@ -335,23 +335,31 @@ func handle_use(delta: float) -> bool:
 		return false
 	#
 	var using := false
+	if Input.is_action_just_pressed("left_use"):
+		$Wings/Wing_L.start_charge()
+	if Input.is_action_just_pressed("right_use"):
+		$Wings/Wing_R.start_charge()
 	if Input.is_action_pressed("left_use"):
 		if left_throw_charge < 1.0:
 			left_throw_charge += delta/ROCK_CHARGE_TIME
 			$UI/ChargeBarL.set_progress(left_throw_charge)
+		$Wings/Wing_L.set_charge(left_throw_charge)
 		using = true
 		$UI/ChargeBarL.visible = true
 	elif Input.is_action_just_released("left_use"):
 		throw_projectile(false)
+		$Wings/Wing_L.throw()
 		$UI/ChargeBarL.visible = false
 	if Input.is_action_pressed("right_use"):
 		if right_throw_charge < 1.0:
 			right_throw_charge += delta/ROCK_CHARGE_TIME
 			$UI/ChargeBarR.set_progress(right_throw_charge)
+		$Wings/Wing_R.set_charge(right_throw_charge)
 		using = true
 		$UI/ChargeBarR.visible = true
 	elif Input.is_action_just_released("right_use"):
 		throw_projectile(true)
+		$Wings/Wing_R.throw()
 		$UI/ChargeBarR.visible = false
 	return using
 
@@ -410,9 +418,9 @@ func input_dir() -> Vector3:
 func throw_projectile(is_right: bool) -> void:
 	var rock := preload("res://scenes/rock.tscn").instantiate()
 	rock.field_bodies = field_bodies
-	var rock_start := Vector3(-2.5, 0.0, 0.0)
+	var rock_start := Vector3(-2.5, -1.0, 0.0)
 	if is_right:
-		rock_start = Vector3(2.5, 0.0, 0.0)
+		rock_start = Vector3(2.5,-1.0, 0.0)
 	rock.position = global_position + global_basis * rock_start
 	rock.linear_velocity = velocity
 	if is_right:

@@ -98,5 +98,3 @@ func start_throw(impulse: float, start_d: Vector3, targ_d: Vector3) -> void:
 	target_direction = targ_d
 	linear_velocity += start_d * impulse / mass
 	$RedirectTimer.wait_time = 10.0 / linear_velocity.length() # 5 comes from ~length*2 of start targ position
-	print($RedirectTimer.wait_time)
-	$RedirectTimer.start()

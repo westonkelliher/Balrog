@@ -47,12 +47,12 @@ size = Vector3(0.01, 0.5, 0.35)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_d0kui"]
 material = ExtResource("1_xqbg4")
-radius = 0.04
-height = 0.8
+radius = 0.05
+height = 0.6
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_g2uh1"]
 material = ExtResource("1_xqbg4")
-radius = 0.03
+radius = 0.04
 height = 0.4
 
 [node name="Wing" type="Node3D"]
@@ -68,7 +68,7 @@ mesh = SubResource("CapsuleMesh_d22j1")
 skeleton = NodePath("../../..")
 
 [node name="Focal" type="Node3D" parent="Focal/Base"]
-transform = Transform3D(-0.5, -0.866025, 0, 0.866025, -0.5, 0, 0, 0, 1, 0, 0.2, 0)
+transform = Transform3D(-0.492404, -0.852868, 0.173648, 0.866025, -0.5, 0, 0.0868241, 0.150384, 0.984808, 0, 0.2, 0)
 
 [node name="Limb" type="MeshInstance3D" parent="Focal/Base/Focal"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
@@ -132,17 +132,17 @@ mesh = SubResource("BoxMesh_x3g2u")
 skeleton = NodePath("../..")
 
 [node name="ArmFocal" type="Node3D" parent="Focal/Base/Focal"]
-transform = Transform3D(0.866025, 0.433013, 0.25, 0, -0.5, 0.866025, 0.5, -0.75, -0.433013, 0, 0.4, 0)
+transform = Transform3D(0.625, 0.649519, -0.433013, -0.433013, 0.75, 0.5, 0.649519, -0.125, 0.75, 0, 0.4, 0)
 
 [node name="ArmLimb" type="MeshInstance3D" parent="Focal/Base/Focal/ArmFocal"]
-transform = Transform3D(1, 9.31323e-09, -7.45058e-09, -5.02914e-08, 1, 1.11759e-08, 7.45058e-09, -1.11759e-08, 1, 0, 0.4, 0)
+transform = Transform3D(1, 9.31323e-09, -7.45058e-09, -5.02914e-08, 1, 1.11759e-08, 7.45058e-09, -1.11759e-08, 1, 0, 0.3, 0)
 mesh = SubResource("CapsuleMesh_d0kui")
 skeleton = NodePath("../../..")
 
 [node name="Focal" type="Node3D" parent="Focal/Base/Focal/ArmFocal/ArmLimb"]
-transform = Transform3D(0.923879, 0.382683, 0, -0.382683, 0.923879, 0, 0, 0, 1, 0, 0.37, 0)
+transform = Transform3D(0.939692, -0.262002, 0.219846, 0, 0.642787, 0.766044, -0.34202, -0.719846, 0.604023, 0, 0.27, 0)
 
 [node name="HandLimb" type="MeshInstance3D" parent="Focal/Base/Focal/ArmFocal/ArmLimb/Focal"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.175, 0)
 mesh = SubResource("CapsuleMesh_g2uh1")
 skeleton = NodePath("../..")

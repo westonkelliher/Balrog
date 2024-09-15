@@ -2,29 +2,49 @@ extends Node3D
 
 
 class WingPosition:
-	var base_stretch := 0.0 # to 1.0
-	var fore_stretch := 0.0 # to 1.0
+	var base_stretch := 0.2 # 0.0 to 1.0
+	var fore_stretch := 0.4 # 0.0 to 1.0
+	var back_reach := 0.1 # 0.0 to 1.0
+	var foreward_reach := 0.1 # 0.0 to 1.0
 	var raised := 0.7 # 0.0 to 1.0
 	var preened := 0.0 # 0.0 to 1.0
-	var flair := 0.0 # 0.0 to 1.0
+	var flair := 0.0 # 0.0 to 3.0+
+	var arm_raise := 0.2 # 0.0 to 1.0
+	var arm_outward := 0.2 # 0.0 to 1.0
 	
-	func is_equal(wp: WingPosition) -> bool:
-		return (base_stretch == wp.base_stretch and 
-			fore_stretch == wp.fore_stretch and
-			raised == wp.raised and
-			preened == wp.preened and
-			flair == wp.flair)
 	func distance(wp: WingPosition) -> float:
 		return ( abs(base_stretch - wp.base_stretch) +
 			abs(fore_stretch - wp.fore_stretch) +
 			abs(raised - wp.raised)*3.0 +
 			abs(preened - wp.preened) +
-			abs(flair - wp.flair) )
+			abs(flair - wp.flair) +
+			abs(back_reach - wp.back_reach) +
+			abs(foreward_reach - wp.foreward_reach) +
+			abs(arm_raise - wp.arm_raise) +
+			abs(arm_outward - wp.arm_outward) )
+	
+	func is_equal(wp: WingPosition) -> bool:
+		return distance(wp) < 0.00001
+	
+	func print() -> void:
+		print( str(base_stretch)
+		+ " " + str(fore_stretch)
+		+ " " + str(back_reach)
+		+ " " + str(foreward_reach)
+		+ " " + str(raised)
+		+ " " + str(preened)
+		+ " " + str(flair)
+		+ " " + str(arm_raise)
+		+ " " + str(arm_outward)
+		)
 
 var wp_tuck: WingPosition = WingPosition.new()
 var wp_spread: WingPosition = WingPosition.new()
 var wp_tuck_raised: WingPosition = WingPosition.new()
 var wp_tuck_lowered: WingPosition = WingPosition.new()
+#
+var wp_charge_full: WingPosition = WingPosition.new()
+var wp_charge_release: WingPosition = WingPosition.new()
 
 var saved_wp: WingPosition = WingPosition.new()
 var target_wp: WingPosition = WingPosition.new()
@@ -43,17 +63,34 @@ func _ready() -> void:
 	#
 	wp_spread.base_stretch = 0.9
 	wp_spread.fore_stretch = 0.9
+	wp_spread.arm_outward = 1.0
 	#
 	wp_tuck_raised.base_stretch = 0.9
 	wp_tuck_raised.fore_stretch = 0.0
 	wp_tuck_raised.raised = 0.9
 	wp_tuck_raised.flair = -0.4
+	#wp_tuck_raised.arm_raise = 0.1
+	wp_tuck_raised.arm_outward = 0.9
 	#
 	wp_tuck_lowered.base_stretch = 0.7
 	wp_tuck_lowered.fore_stretch = 1.1
 	wp_tuck_lowered.raised = 0.1
 	wp_tuck_lowered.preened = 0.9
 	wp_tuck_lowered.flair = 1.2
+	wp_tuck_lowered.arm_outward = 1.0
+	#
+	wp_charge_full.base_stretch = 0.3
+	wp_charge_full.fore_stretch = 0.9
+	wp_charge_full.back_reach = 1.0
+	wp_charge_full.flair = 2.5
+	wp_charge_full.arm_raise = 0.4
+	#
+	wp_charge_release.base_stretch = 0.9
+	wp_charge_release.fore_stretch = 0.1
+	wp_charge_release.back_reach = -0.3
+	wp_charge_release.foreward_reach = 0.8
+	wp_charge_release.flair = 0.1
+	wp_charge_release.arm_raise = 0.7
 	#
 	current_wp = wp_tuck
 	saved_wp = current_wp
@@ -62,6 +99,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if flap_progress < 1.0:
+		print("A")
 		flap_speed = move_toward(flap_speed, FLAP_SPEED_MAX, FLAP_ACC * delta)
 		flap_speed *= pow(1.0 - flap_progress, delta*15.0*pow(flap_progress, 2))
 		flap_progress = move_toward(flap_progress, 1.0, flap_speed * delta)
@@ -69,6 +107,13 @@ func _process(delta: float) -> void:
 		apply_wing_position(current_wp)
 	else:
 		flap_speed = 0.0
+		print()
+		current_wp.print()
+		wp_charge_release.print()
+		print(current_wp.distance(wp_charge_release))
+		print( current_wp.is_equal(wp_charge_release))
+		if current_wp.is_equal(wp_charge_release):
+			set_target(wp_tuck)
 	#elif flap_progress > 1.0:
 		#var flap_dec := 4.0 * flap_speed * FLAP_ACC
 		#flap_speed -= flap_dec * delta
@@ -90,6 +135,8 @@ func apply_wing_position(wp: WingPosition) -> void:
 	var BladePivotC := $Focal/Base/Focal/Limb/Focal/ForeLimb/BladePivot
 	var BladePivotD := $Focal/Base/Focal/Limb/Focal/ForeLimb/Focal/HandLimb/BladePivot
 	var BladePivotE := $Focal/Base/Focal/Limb/Focal/ForeLimb/Focal/HandLimb/Focal/HandLimb/BladePivot
+	var ArmFocalA := $Focal/Base/Focal/ArmFocal
+	var ArmFocalB := $Focal/Base/Focal/ArmFocal/ArmLimb/Focal
 	# base_stretch
 	FocalA.rotation.z = lerp(-PI, -PI*0.25, wp.base_stretch)
 	FocalB.rotation.z = lerp(PI, -PI*0.2, wp.base_stretch)
@@ -110,25 +157,65 @@ func apply_wing_position(wp: WingPosition) -> void:
 	BladePivotC.rotation.y += lerp(0.0, -PI*0.25, wp.flair)
 	BladePivotD.rotation.y += lerp(0.0, -PI*0.25, wp.flair)
 	BladePivotE.rotation.y += lerp(0.0, -PI*0.25, wp.flair)
+	# backreach
+	FocalA.rotation.x = lerp(0.0, -20*(PI/180), wp.back_reach)
+	FocalA.rotation.y = lerp(0.0, -40*(PI/180), wp.back_reach)
+	print(wp.back_reach)
+	# foreward_reach
+	FocalB.rotation.x = lerp(0.0, -40*(PI/180), wp.foreward_reach)
+	#FocalC.rotation.y = lerp(0.0, 90*(PI/180), wp.foreward_reach)
+	#FocalC.rotation.x = lerp(0.0, -40*(PI/180), wp.foreward_reach)
+	# arms 
+	ArmFocalA.rotation.x = lerp(-150*(PI/180), 0.0, wp.arm_raise)
+	ArmFocalA.rotation.y = lerp(-40*(PI/180), 30*(PI/180), wp.arm_raise)
+	ArmFocalA.rotation.z = lerp(0.0, 30*(PI/180), wp.arm_raise)
+	# arm out
+	ArmFocalA.rotation.x += lerp(0.0, 120*(PI/180), wp.arm_outward)
+	ArmFocalA.rotation.y += lerp(0.0, 10*(PI/180), wp.arm_outward)
+	ArmFocalA.rotation.z += lerp(0.0, -30*(PI/180), wp.arm_outward)
+	#
+	ArmFocalB.rotation.x = lerp(0.0, -50*(PI/180), wp.arm_outward)
+	ArmFocalB.rotation.y  = lerp(0.0, 20*(PI/180), wp.arm_outward)
+	
+	
 
+
+func set_target(targ: WingPosition, reset_start: bool = true) -> void:
+	targ.print()
+	if reset_start:
+		flap_progress = 0.0
+		flap_speed = 0.0
+		saved_wp = current_wp
+	target_wp = targ
+		
+
+
+func start_charge() -> void:
+	print("ASASAS")
+	set_target(wp_tuck)
+
+# called many times in sequence
+func set_charge(charge: float) -> void:
+	var targ := wing_interp(wp_tuck, wp_charge_full, charge)
+	print("targ " + str(targ.back_reach))
+	flap_progress = sqrt(charge)
+	set_target(targ, false)
+
+func throw() -> void:
+	set_target(wp_charge_release)
+	flap_speed = FLAP_SPEED_MAX
 
 func set_tucked(tuck: bool) -> void:
-	flap_progress = 0.0
-	flap_speed = 0.0
-	saved_wp = current_wp
 	if tuck:
-		target_wp = wp_tuck
+		set_target(wp_tuck)
 	else:
-		target_wp = wp_spread
+		set_target(wp_spread)
 
 func set_raised(raise: bool) -> void:
-	flap_progress = 0.0
-	flap_speed = 0.0
-	saved_wp = current_wp
 	if raise:
-		target_wp = wp_tuck_raised
+		set_target(wp_tuck_raised)
 	else:
-		target_wp = wp_tuck_lowered
+		set_target(wp_tuck_lowered)
 
 
 func wing_interp(wp1: WingPosition, wp2: WingPosition, amount: float) -> WingPosition:
@@ -138,6 +225,10 @@ func wing_interp(wp1: WingPosition, wp2: WingPosition, amount: float) -> WingPos
 	new.raised = lerp(wp1.raised, wp2.raised, amount)
 	new.preened = lerp(wp1.preened, wp2.preened, amount)
 	new.flair = lerp(wp1.flair, wp2.flair, pow(amount, 0.5))
+	new.back_reach = lerp(wp1.back_reach, wp2.back_reach, amount)
+	new.foreward_reach = lerp(wp1.foreward_reach, wp2.foreward_reach, amount)
+	new.arm_outward = lerp(wp1.arm_outward, wp2.arm_outward, amount)
+	new.arm_raise = lerp(wp1.arm_raise, wp2.arm_raise, amount)
 	return new
 
 func get_wing_force(dir: Vector3) -> Vector3:

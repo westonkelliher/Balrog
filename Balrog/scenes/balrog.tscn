@@ -23,12 +23,12 @@ albedo_color = Color(0.352941, 0.352941, 0.352941, 0.207843)
 [sub_resource type="SphereMesh" id="SphereMesh_ovoqe"]
 material = SubResource("StandardMaterial3D_62aut")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_e3aw7"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_xb51m"]
 radius = 1.0
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_0g3h2"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_4c4v5"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_tyx4a"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_1kgc1"]
 
 [node name="Balrog" type="CharacterBody3D"]
 collision_layer = 2
@@ -75,20 +75,20 @@ margin = 0.05
 fov = 70.0
 
 [node name="FieldCollider" parent="CamPivot/SpringArm/Q/Camera3D" node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
-shape = SubResource("SphereShape3D_e3aw7")
+shape = SubResource("SphereShape3D_xb51m")
 ground_stick = 0.0
 parent_body = NodePath("..")
 
 [node name="FieldCollider" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-shape = SubResource("SphereShape3D_0g3h2")
+shape = SubResource("SphereShape3D_4c4v5")
 radius = 0.5
 ground_stick = 1.5
 parent_body = NodePath("..")
 
 [node name="FieldCollider2" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-shape = SubResource("SphereShape3D_tyx4a")
+shape = SubResource("SphereShape3D_1kgc1")
 radius = 0.5
 ground_stick = 0.0
 parent_body = NodePath("..")
