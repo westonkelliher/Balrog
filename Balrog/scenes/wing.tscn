@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://dossusm1hrl70"]
+[gd_scene load_steps=15 format=3 uid="uid://dossusm1hrl70"]
 
 [ext_resource type="Script" path="res://scripts/wing.gd" id="1_4kb4k"]
 [ext_resource type="Material" uid="uid://bis4vno0br1qf" path="res://mats/red.tres" id="1_xqbg4"]
@@ -44,6 +44,16 @@ size = Vector3(0.01, 0.55, 0.55)
 [sub_resource type="BoxMesh" id="BoxMesh_x3g2u"]
 material = ExtResource("2_0myko")
 size = Vector3(0.01, 0.5, 0.35)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_d0kui"]
+material = ExtResource("1_xqbg4")
+radius = 0.04
+height = 0.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_g2uh1"]
+material = ExtResource("1_xqbg4")
+radius = 0.03
+height = 0.4
 
 [node name="Wing" type="Node3D"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
@@ -119,4 +129,20 @@ transform = Transform3D(0.5, 0, 0.866025, 0, 1, 0, -0.866025, 0, 0.5, 0, 0, 0)
 [node name="Blade" type="MeshInstance3D" parent="Focal/Base/Focal/Limb/BladePivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.175)
 mesh = SubResource("BoxMesh_x3g2u")
+skeleton = NodePath("../..")
+
+[node name="ArmFocal" type="Node3D" parent="Focal/Base/Focal"]
+transform = Transform3D(0.866025, 0.433013, 0.25, 0, -0.5, 0.866025, 0.5, -0.75, -0.433013, 0, 0.4, 0)
+
+[node name="ArmLimb" type="MeshInstance3D" parent="Focal/Base/Focal/ArmFocal"]
+transform = Transform3D(1, 9.31323e-09, -7.45058e-09, -5.02914e-08, 1, 1.11759e-08, 7.45058e-09, -1.11759e-08, 1, 0, 0.4, 0)
+mesh = SubResource("CapsuleMesh_d0kui")
+skeleton = NodePath("../../..")
+
+[node name="Focal" type="Node3D" parent="Focal/Base/Focal/ArmFocal/ArmLimb"]
+transform = Transform3D(0.923879, 0.382683, 0, -0.382683, 0.923879, 0, 0, 0, 1, 0, 0.37, 0)
+
+[node name="HandLimb" type="MeshInstance3D" parent="Focal/Base/Focal/ArmFocal/ArmLimb/Focal"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("CapsuleMesh_g2uh1")
 skeleton = NodePath("../..")

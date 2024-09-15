@@ -34,6 +34,7 @@ radius = 1.0
 collision_layer = 2
 floor_block_on_wall = false
 script = ExtResource("1_ecelo")
+WALK_SPEED = 3.0
 
 [node name="Shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
@@ -92,8 +93,7 @@ radius = 0.5
 ground_stick = 0.0
 parent_body = NodePath("..")
 
-[node name="CrossHair" type="Control" parent="."]
-z_index = -10
+[node name="UI" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -104,11 +104,35 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Sprite" type="Sprite2D" parent="CrossHair"]
+[node name="CrossHair" type="Sprite2D" parent="UI"]
 texture = ExtResource("5_hv76l")
 
-[node name="ChargeBarL" parent="." instance=ExtResource("6_x6jld")]
-position = Vector2(659, 578)
+[node name="ChargeBarL" parent="UI" instance=ExtResource("6_x6jld")]
+position = Vector2(-202, 181)
 
-[node name="ChargeBarR" parent="." instance=ExtResource("6_x6jld")]
-position = Vector2(981, 577)
+[node name="ChargeBarR" parent="UI" instance=ExtResource("6_x6jld")]
+position = Vector2(120, 180)
+
+[node name="Centroid" type="Control" parent="UI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1600.0
+offset_bottom = -900.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="SizeBarL" parent="UI/Centroid" instance=ExtResource("6_x6jld")]
+position = Vector2(200, 400)
+rotation = -1.5708
+scale = Vector2(1, -1)
+END_WIDTH = 200.0
+HEIGHT = 15.0
+
+[node name="SizeBarR" parent="UI/Centroid" instance=ExtResource("6_x6jld")]
+position = Vector2(1400, 400)
+rotation = -1.5708
+END_WIDTH = 200.0
+HEIGHT = 15.0

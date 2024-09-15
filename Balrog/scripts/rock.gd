@@ -28,7 +28,7 @@ func apply_redirect() -> void:
 	var perp_proj := target_direction - proj
 	$RayCast3D.target_position = perp_proj
 	#assert()
-	var mult := pow(linear_velocity.length(), 2.0)*0.3
+	var mult := pow(linear_velocity.length(), 2.0)*0.4 * mass
 	apply_force(perp_proj*mult)
 	var grav_resistance: float = 0.4 + 0.5*($RedirectTimer.time_left / $RedirectTimer.wait_time)
 	apply_force(-total_gravity * grav_resistance)
@@ -49,7 +49,7 @@ func calculate_fields(delta: float) -> void:
 	for i in field_bodies.size():
 		var fb := field_bodies[i]
 		total_gravity += fb.gravity_func.call(global_position) * weights[i]
-	total_gravity *= grav_mult
+	total_gravity *= grav_mult * mass
 	# up direction
 	var up_d := Vector3.ZERO
 	for i in field_bodies.size():
@@ -85,6 +85,13 @@ func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> vo
 
 func _on_live_timer_timeout() -> void:
 	queue_free()
+
+func set_fake_mass(m: float) -> void:
+	mass = m
+	var r := 0.35*pow(mass, 0.5) # use m=r^2 because more fun than m=r^3
+	$BlendMesh.scale = Vector3.ONE*r * 2.0/3.0
+	$FieldCollider.radius = r
+	$Shape.shape.radius = r
 
 func start_throw(impulse: float, start_d: Vector3, targ_d: Vector3) -> void:
 	#apply_impulse(start_d * impulse)
