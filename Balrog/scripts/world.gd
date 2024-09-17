@@ -2,10 +2,16 @@ extends Node3D
 
 
 func _ready() -> void:
-	$Balrog/FieldCollider.ground_stick = 20.0 #TODO: remove
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#$Balrog.gravities.append($Floor/GravObject)
 
+
+func _physics_process(delta: float) -> void:
+	if Input.is_action_just_pressed("0"):
+		var bun := preload("res://bunbun.tscn").instantiate()
+		bun.global_position = $Balrog.global_position + Vector3.ONE*2.0
+		bun.field_bodies = $Balrog.field_bodies
+		$Objects.add_child(bun)
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):

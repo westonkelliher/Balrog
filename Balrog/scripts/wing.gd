@@ -106,21 +106,8 @@ func _process(delta: float) -> void:
 		apply_wing_position(current_wp)
 	else:
 		flap_speed = 0.0
-		#print()
-		#current_wp.print()
-		#wp_charge_release.print()
-		#print(current_wp.distance(wp_charge_release))
-		#print( current_wp.is_equal(wp_charge_release))
 		if current_wp.is_equal(wp_charge_release):
 			set_target(wp_tuck)
-	#elif flap_progress > 1.0:
-		#var flap_dec := 4.0 * flap_speed * FLAP_ACC
-		#flap_speed -= flap_dec * delta
-		#flap_speed *= pow(0.00000000000001, delta)
-		##if flap_speed < 0.0:
-			##flap_speed *= pow(0.0001, delta)
-		#flap_progress += flap_speed * delta
-		#apply_wing_position(current_wp)
 		
 	
 
@@ -159,7 +146,6 @@ func apply_wing_position(wp: WingPosition) -> void:
 	# backreach
 	FocalA.rotation.x = lerp(0.0, -20*(PI/180), wp.back_reach)
 	FocalA.rotation.y = lerp(0.0, -40*(PI/180), wp.back_reach)
-	#print(wp.back_reach)
 	# foreward_reach
 	FocalB.rotation.x = lerp(0.0, -40*(PI/180), wp.foreward_reach)
 	#FocalC.rotation.y = lerp(0.0, 90*(PI/180), wp.foreward_reach)
@@ -180,7 +166,6 @@ func apply_wing_position(wp: WingPosition) -> void:
 
 
 func set_target(targ: WingPosition, reset_start: bool = true) -> void:
-	targ.print()
 	if reset_start:
 		flap_progress = 0.0
 		flap_speed = 0.0
@@ -190,13 +175,11 @@ func set_target(targ: WingPosition, reset_start: bool = true) -> void:
 
 
 func start_charge() -> void:
-	print("ASASAS")
 	set_target(wp_tuck)
 
 # called many times in sequence
 func set_charge(charge: float) -> void:
 	var targ := wing_interp(wp_tuck, wp_charge_full, charge)
-	print("targ " + str(targ.back_reach))
 	flap_progress = sqrt(charge)
 	set_target(targ, false)
 

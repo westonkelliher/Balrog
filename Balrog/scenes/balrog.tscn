@@ -23,18 +23,17 @@ albedo_color = Color(0.352941, 0.352941, 0.352941, 0.207843)
 [sub_resource type="SphereMesh" id="SphereMesh_ovoqe"]
 material = SubResource("StandardMaterial3D_62aut")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_v2jc4"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_b3bm0"]
 radius = 1.0
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_lr783"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_6cu36"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_bc88f"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_8vp21"]
 
 [node name="Balrog" type="CharacterBody3D"]
 collision_layer = 2
 floor_block_on_wall = false
 script = ExtResource("1_ecelo")
-WALK_SPEED = 3.0
 
 [node name="Shape" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
@@ -66,7 +65,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
 
 [node name="SpringArm" type="SpringArm3D" parent="CamPivot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)
-spring_length = 4.0
+spring_length = 2.0
 margin = 0.05
 
 [node name="Q" type="Node3D" parent="CamPivot/SpringArm"]
@@ -75,22 +74,20 @@ margin = 0.05
 fov = 70.0
 
 [node name="FieldCollider" parent="CamPivot/SpringArm/Q/Camera3D" node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
-shape = SubResource("SphereShape3D_v2jc4")
-ground_stick = 0.0
+shape = SubResource("SphereShape3D_b3bm0")
 parent_body = NodePath("..")
 
 [node name="FieldCollider" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-shape = SubResource("SphereShape3D_lr783")
+shape = SubResource("SphereShape3D_6cu36")
 radius = 0.5
 ground_stick = 1.5
 parent_body = NodePath("..")
 
 [node name="FieldCollider2" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-shape = SubResource("SphereShape3D_bc88f")
+shape = SubResource("SphereShape3D_8vp21")
 radius = 0.5
-ground_stick = 0.0
 parent_body = NodePath("..")
 
 [node name="UI" type="Control" parent="."]
