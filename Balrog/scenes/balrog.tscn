@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/balrog.gd" id="1_ecelo"]
 [ext_resource type="Material" uid="uid://dj8c8abta0f7j" path="res://mats/black.tres" id="1_mcbjj"]
 [ext_resource type="PackedScene" uid="uid://dossusm1hrl70" path="res://scenes/wing.tscn" id="1_q2pr5"]
-[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="4_633lb"]
+[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://utils/field_collider.tscn" id="4_633lb"]
 [ext_resource type="Texture2D" uid="uid://brksc7wgetnlu" path="res://images/crosshair.png" id="5_hv76l"]
 [ext_resource type="PackedScene" uid="uid://bmkcdsuvspncr" path="res://utils/charge_bar.tscn" id="6_x6jld"]
 
@@ -23,12 +23,12 @@ albedo_color = Color(0.352941, 0.352941, 0.352941, 0.207843)
 [sub_resource type="SphereMesh" id="SphereMesh_ovoqe"]
 material = SubResource("StandardMaterial3D_62aut")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_xb51m"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_v2jc4"]
 radius = 1.0
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_4c4v5"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_lr783"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_1kgc1"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_bc88f"]
 
 [node name="Balrog" type="CharacterBody3D"]
 collision_layer = 2
@@ -75,20 +75,20 @@ margin = 0.05
 fov = 70.0
 
 [node name="FieldCollider" parent="CamPivot/SpringArm/Q/Camera3D" node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
-shape = SubResource("SphereShape3D_xb51m")
+shape = SubResource("SphereShape3D_v2jc4")
 ground_stick = 0.0
 parent_body = NodePath("..")
 
 [node name="FieldCollider" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-shape = SubResource("SphereShape3D_4c4v5")
+shape = SubResource("SphereShape3D_lr783")
 radius = 0.5
 ground_stick = 1.5
 parent_body = NodePath("..")
 
 [node name="FieldCollider2" parent="." node_paths=PackedStringArray("parent_body") instance=ExtResource("4_633lb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-shape = SubResource("SphereShape3D_1kgc1")
+shape = SubResource("SphereShape3D_bc88f")
 radius = 0.5
 ground_stick = 0.0
 parent_body = NodePath("..")

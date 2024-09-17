@@ -2,33 +2,33 @@
 
 [ext_resource type="Script" path="res://scripts/toro.gd" id="1_0odgv"]
 [ext_resource type="Material" uid="uid://gge1nkc5bfx0" path="res://mats/grass.tres" id="1_fbye4"]
-[ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/fielded_body.tscn" id="2_o5wnk"]
+[ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/field_body.tscn" id="2_o5wnk"]
 [ext_resource type="Shader" path="res://mats/toro.gdshader" id="4_u16qp"]
 
-[sub_resource type="TorusMesh" id="TorusMesh_uq3gt"]
+[sub_resource type="TorusMesh" id="TorusMesh_rehtj"]
 material = ExtResource("1_fbye4")
-inner_radius = 171.0
-outer_radius = 199.0
+inner_radius = 20.0
+outer_radius = 40.0
 rings = 128
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_bx3d2"]
-height = 1194.0
-radius = 597.0
+height = 240.0
+radius = 120.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_y7w0v"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_og7cw"]
 render_priority = 0
 shader = ExtResource("4_u16qp")
-shader_parameter/thickness = 0.0756757
+shader_parameter/thickness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_4vv0w"]
-material = SubResource("ShaderMaterial_y7w0v")
+material = SubResource("ShaderMaterial_og7cw")
 size = Vector3(4, 4, 4)
 
 [node name="Toro" type="Node3D"]
 script = ExtResource("1_0odgv")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("TorusMesh_uq3gt")
+mesh = SubResource("TorusMesh_rehtj")
 
 [node name="GravObject" parent="." instance=ExtResource("2_o5wnk")]
 gravity_func = Callable()

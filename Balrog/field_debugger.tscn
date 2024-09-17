@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://33bah3xgwu7a"]
+
+[ext_resource type="Script" path="res://field_debugger.gd" id="1_16s3v"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_afpg0"]
+
+[node name="FieldDebugger" type="CollisionShape3D"]
+shape = SubResource("SphereShape3D_afpg0")
+script = ExtResource("1_16s3v")
+
+[node name="RayCast" type="RayCast3D" parent="."]

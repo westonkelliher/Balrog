@@ -19,7 +19,7 @@ var speed := WALK_SPEED
 @onready var CAMERA := $CamPivot/SpringArm/Q/Camera3D
 
 var field_colliders: Array[FieldCollider] = []
-var field_bodies: Array[FieldedBody] = []
+var field_bodies: Array[FieldBody] = []
 var total_gravity := Vector3.ZERO
 var on_floor := 0.0
 const DEFLOOR_RATE := 6.0
@@ -117,8 +117,8 @@ func calculate_fields(delta: float) -> void:
 	var weights := []
 	var total_weight := 0.0
 	for fb in field_bodies:
-		var signed_distance: float = fb.signed_distance_func.call(global_position)
-		var grav: float = fb.gravity_func.call(global_position).length()
+		var signed_distance: float = fb.field_sdf(global_position)
+		var grav: float = fb.field_gravity(global_position).length()
 		var w:= grav/pow(abs(signed_distance), 0.9)
 		total_weight += w
 		weights.append(w)
@@ -128,45 +128,46 @@ func calculate_fields(delta: float) -> void:
 	total_gravity = Vector3.ZERO
 	for i in field_bodies.size():
 		var fb := field_bodies[i]
-		total_gravity += fb.gravity_func.call(global_position) * weights[i]
+		total_gravity += fb.field_gravity(global_position) * weights[i]
 	# up direction
 	var up_d := Vector3.ZERO
 	for i in field_bodies.size():
 		var fb := field_bodies[i]
-		up_d += fb.normal_func.call(global_position) * weights[i]
-	up_direction = up_d.normalized()
+		up_d += fb.field_normal(global_position) * weights[i]
+	if up_d.length() > 0.0001:
+		up_direction = up_d.normalized()
 	# atmosphere
 	atmosphere = 0.0
 	for i in field_bodies.size():
 		var fb := field_bodies[i]
-		atmosphere += fb.atmosphere_func.call(global_position) * weights[i]
+		atmosphere += fb.field_atmosphere(global_position) * weights[i]
 
 
 func handle_floor_clips(delta: float) -> void:
 	floor_clips = []
 	for fb in field_bodies:
 		for collider in field_colliders:
-			var signed_distance: float = fb.signed_distance_func.call(collider.global_position)
+			var signed_distance: float = fb.field_sdf(collider.global_position)
 			if signed_distance < collider.radius:
 				handle_a_floor_clip(delta, fb, collider)
 		handle_camera_clip(fb, delta)
 
-func handle_camera_clip(fb: FieldedBody, delta: float) -> void:
+func handle_camera_clip(fb: FieldBody, delta: float) -> void:
 	var cam_fc := $CamPivot/SpringArm/Q/Camera3D/FieldCollider
-	var signed_distance: float = fb.signed_distance_func.call(cam_fc.global_position)
+	var signed_distance: float = fb.field_sdf(cam_fc.global_position)
 	if signed_distance > cam_fc.radius:
 		var a: Vector3 = CAMERA.position
 		CAMERA.position *= pow(0.4, delta)
 		return
-	var normal: Vector3 = fb.normal_func.call(global_position)
+	var normal: Vector3 = fb.field_normal(global_position)
 	var depth: float = cam_fc.radius - signed_distance
 	#while signed_distance < cam_fc.radius # 0:
 	#$SpringArm.spring_length
 	CAMERA.position += Vector3.FORWARD*(depth*0.5 + 0.01)
 	#print("cam: " + str(cam.position))
-	signed_distance = fb.signed_distance_func.call(cam_fc.global_position)
+	signed_distance = fb.field_sdf(cam_fc.global_position)
 	
-func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> void:
+func handle_a_floor_clip(delta: float, fb: FieldBody, fc: FieldCollider) -> void:
 	fc.handle_fieldedbody_collision(fb)
 	if fc == $FieldCollider:
 		if on_floor == 0:

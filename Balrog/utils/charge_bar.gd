@@ -8,7 +8,7 @@ class_name ChargeBar
 @export var END_WIDTH := 100.0 :
 	set(value):
 		END_WIDTH = value
-		if $Outer == null:
+		if !has_node("Outer"):
 			return
 		$Outer.size.x = END_WIDTH + 4.0
 		$Outer.position.x = -0.5*(END_WIDTH + 4.0)
@@ -19,7 +19,7 @@ class_name ChargeBar
 @export var HEIGHT := 20.0 :
 	set(value):
 		HEIGHT = value
-		if $Outer == null:
+		if !has_node("Outer"):
 			return
 		$Outer.size.y = HEIGHT + 4.0
 		$Fill.size.y = HEIGHT

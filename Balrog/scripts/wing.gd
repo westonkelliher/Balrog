@@ -9,8 +9,8 @@ class WingPosition:
 	var raised := 0.7 # 0.0 to 1.0
 	var preened := 0.0 # 0.0 to 1.0
 	var flair := 0.0 # 0.0 to 3.0+
-	var arm_raise := 0.2 # 0.0 to 1.0
-	var arm_outward := 0.2 # 0.0 to 1.0
+	var arm_raise := 0.0 # 0.0 to 1.0
+	var arm_outward := 0.0 # 0.0 to 1.0
 	
 	func distance(wp: WingPosition) -> float:
 		return ( abs(base_stretch - wp.base_stretch) +
@@ -99,7 +99,6 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if flap_progress < 1.0:
-		print("A")
 		flap_speed = move_toward(flap_speed, FLAP_SPEED_MAX, FLAP_ACC * delta)
 		flap_speed *= pow(1.0 - flap_progress, delta*15.0*pow(flap_progress, 2))
 		flap_progress = move_toward(flap_progress, 1.0, flap_speed * delta)
@@ -107,11 +106,11 @@ func _process(delta: float) -> void:
 		apply_wing_position(current_wp)
 	else:
 		flap_speed = 0.0
-		print()
-		current_wp.print()
-		wp_charge_release.print()
-		print(current_wp.distance(wp_charge_release))
-		print( current_wp.is_equal(wp_charge_release))
+		#print()
+		#current_wp.print()
+		#wp_charge_release.print()
+		#print(current_wp.distance(wp_charge_release))
+		#print( current_wp.is_equal(wp_charge_release))
 		if current_wp.is_equal(wp_charge_release):
 			set_target(wp_tuck)
 	#elif flap_progress > 1.0:
@@ -160,7 +159,7 @@ func apply_wing_position(wp: WingPosition) -> void:
 	# backreach
 	FocalA.rotation.x = lerp(0.0, -20*(PI/180), wp.back_reach)
 	FocalA.rotation.y = lerp(0.0, -40*(PI/180), wp.back_reach)
-	print(wp.back_reach)
+	#print(wp.back_reach)
 	# foreward_reach
 	FocalB.rotation.x = lerp(0.0, -40*(PI/180), wp.foreward_reach)
 	#FocalC.rotation.y = lerp(0.0, 90*(PI/180), wp.foreward_reach)
@@ -203,7 +202,7 @@ func set_charge(charge: float) -> void:
 
 func throw() -> void:
 	set_target(wp_charge_release)
-	flap_speed = FLAP_SPEED_MAX
+	flap_speed = FLAP_SPEED_MAX*0.5
 
 func set_tucked(tuck: bool) -> void:
 	if tuck:

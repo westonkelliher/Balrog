@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxyd1te8fawp4"]
+
+[ext_resource type="Script" path="res://utils/field_collider.gd" id="1_fnn6c"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ewbsi"]
+radius = 1.0
+
+[node name="FieldCollider" type="CollisionShape3D"]
+shape = SubResource("SphereShape3D_ewbsi")
+script = ExtResource("1_fnn6c")

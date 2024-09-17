@@ -2,33 +2,25 @@
 
 [ext_resource type="Material" uid="uid://gge1nkc5bfx0" path="res://mats/grass.tres" id="1_c8dl1"]
 [ext_resource type="Script" path="res://scripts/globe.gd" id="1_r650x"]
-[ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/fielded_body.tscn" id="2_p5evs"]
+[ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/field_body.tscn" id="2_p5evs"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_u476s"]
+[sub_resource type="SphereMesh" id="SphereMesh_p4d05"]
 material = ExtResource("1_c8dl1")
-radius = 50.0
-height = 100.0
-radial_segments = 128
-rings = 64
+radius = 1.0
+height = 2.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_1uvea"]
-radius = 150.0
+radius = 3.0
 
-[node name="Globe" type="StaticBody3D"]
+[node name="Globe" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.11139, 1.85745, 0)
 script = ExtResource("1_r650x")
-radius = 50.0
-atmospheric_half_life = 30.0
-gravitational_half_life = 50.0
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("SphereMesh_u476s")
+mesh = SubResource("SphereMesh_p4d05")
 
-[node name="GravObject" parent="." instance=ExtResource("2_p5evs")]
-gravity_func = Callable()
-normal_func = Callable()
-signed_distance_func = Callable()
-atmosphere_func = Callable()
+[node name="FieldBody" parent="." instance=ExtResource("2_p5evs")]
 
-[node name="Shape" type="CollisionShape3D" parent="GravObject"]
+[node name="Shape" type="CollisionShape3D" parent="FieldBody"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_1uvea")

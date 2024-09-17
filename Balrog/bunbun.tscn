@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://c5kvl1mobn241"]
+
+[ext_resource type="Script" path="res://bunbun.gd" id="1_b06cs"]
+[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://utils/field_collider.tscn" id="1_omgk2"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_lubax"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_evxfm"]
+
+[node name="Bunbun" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_b06cs")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.8, 0, 0, 0, 0.7, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("SphereMesh_lubax")
+
+[node name="Mesh" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -0.33, 0.416, -0.294)
+mesh = SubResource("SphereMesh_lubax")
+
+[node name="Mesh2" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0.33, 0.416, -0.294)
+mesh = SubResource("SphereMesh_lubax")
+
+[node name="FieldCollider" parent="." instance=ExtResource("1_omgk2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0468315)
+shape = SubResource("SphereShape3D_evxfm")
+radius = 0.5
+ground_stick = 0.0

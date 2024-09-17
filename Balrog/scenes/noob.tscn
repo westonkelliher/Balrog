@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cm4fhsehrir3t"]
 
-[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://scenes/field_collider.tscn" id="1_luvyw"]
+[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://utils/field_collider.tscn" id="1_luvyw"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pvst0"]
 

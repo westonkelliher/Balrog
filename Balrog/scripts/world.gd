@@ -2,6 +2,7 @@ extends Node3D
 
 
 func _ready() -> void:
+	$Balrog/FieldCollider.ground_stick = 20.0 #TODO: remove
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	#$Balrog.gravities.append($Floor/GravObject)
 

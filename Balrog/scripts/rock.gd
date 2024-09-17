@@ -2,7 +2,7 @@ extends RigidBody3D
 class_name Rock
 
 var field_colliders: Array[FieldCollider] = []
-var field_bodies: Array[FieldedBody] = []
+var field_bodies: Array[FieldBody] = []
 var total_gravity := Vector3.ZERO
 
 var grav_mult := 2.5
@@ -64,7 +64,7 @@ func handle_floor_clips(delta: float) -> void:
 			if signed_distance < collider.radius:
 				handle_a_floor_clip(delta, fb, collider)
 
-func handle_a_floor_clip(delta: float, fb: FieldedBody, fc: FieldCollider) -> void:
+func handle_a_floor_clip(delta: float, fb: FieldBody, fc: FieldCollider) -> void:
 	var rt := $RedirectTimer
 	#print(str(rt.is_stopped()) and rt.time_left > rt.wait_time)
 	#print(str(rt.time_left) + " " + str(rt.wait_time))

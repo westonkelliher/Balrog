@@ -4,7 +4,7 @@ extends StaticBody3D
 @export var radius := 1.0 :
 	set(value):
 		radius = value
-		if $Flat == null:
+		if !has_node("Flat"):
 			return
 		$Flat.mesh.top_radius = value
 		$Flat.mesh.bottom_radius = value
@@ -17,7 +17,7 @@ extends StaticBody3D
 @export var height := 1.0 :
 	set(value):
 		height = value
-		if $Flat == null:
+		if !has_node("Flat"):
 			return
 		$Flat.mesh.height = value
 		#

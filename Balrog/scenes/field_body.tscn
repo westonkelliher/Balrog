@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b4nmmlsklqy2u"]
 
-[ext_resource type="Script" path="res://scripts/fielded_body.gd" id="1_e8mrk"]
+[ext_resource type="Script" path="res://scripts/field_body.gd" id="1_e8mrk"]
 
 [node name="FieldedBody" type="Area3D"]
 collision_mask = 2
