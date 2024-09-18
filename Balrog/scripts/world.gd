@@ -8,7 +8,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("0"):
-		var bun := preload("res://bunbun.tscn").instantiate()
+		var bun := preload("res://scenes/bunbun.tscn").instantiate()
 		bun.global_position = $Balrog.global_position + Vector3.ONE*2.0
 		bun.field_bodies = $Balrog.field_bodies
 		$Objects.add_child(bun)

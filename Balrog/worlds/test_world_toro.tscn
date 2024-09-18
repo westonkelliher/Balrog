@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_6bwxh"]
 [ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="1_jynrh"]
-[ext_resource type="PackedScene" uid="uid://33bah3xgwu7a" path="res://field_debugger.tscn" id="3_xgpm0"]
+[ext_resource type="PackedScene" uid="uid://33bah3xgwu7a" path="res://utils/field_debugger.tscn" id="3_xgpm0"]
 [ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/FieldBodies/toro.tscn" id="4_xen5a"]
 
 [sub_resource type="Environment" id="Environment_a0an1"]
@@ -13,7 +13,7 @@ ambient_light_energy = 0.2
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_db0h4"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_70hem"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_kv7k4"]
 
 [node name="TestWorldToro" type="Node3D"]
 script = ExtResource("1_6bwxh")
@@ -31,8 +31,8 @@ light_angular_distance = 40.0
 shadow_enabled = true
 shadow_blur = 10.0
 
-[node name="LeftLight" type="DirectionalLight3D" parent="WorldEnvironment"]
-transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 249.9, 388.895, -288.149)
+[node name="UpLight" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 0.34202, -0.939692, 0, 0.939692, 0.34202, 249.9, 388.895, -288.149)
 light_color = Color(1, 0.912549, 0.84186, 1)
 light_energy = 1.5
 shadow_enabled = true
@@ -46,7 +46,7 @@ WING_MULT = 1.0
 
 [node name="FieldDebugger" parent="Objects" instance=ExtResource("3_xgpm0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.64248, 6.12233, -4.37296)
-shape = SubResource("SphereShape3D_70hem")
+shape = SubResource("SphereShape3D_kv7k4")
 
 [node name="Rocks" type="Node3D" parent="Objects"]
 

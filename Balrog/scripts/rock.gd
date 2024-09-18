@@ -83,6 +83,10 @@ func handle_a_floor_clip(delta: float, fb: FieldBody, fc: FieldCollider) -> void
 	linear_velocity *= pow(0.8, delta)
 	#print("clip: " + str(depth))
 
+func handle_impulse(impulse: Vector3) -> void:
+	apply_impulse(impulse)
+	$RedirectTimer.stop()
+
 
 func _on_live_timer_timeout() -> void:
 	queue_free()

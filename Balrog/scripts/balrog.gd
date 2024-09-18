@@ -34,6 +34,8 @@ var last_velocity := Vector3.ZERO
 var righting_force := 0.0
 var MAX_RIGHTING_FORCE := 1.0
 
+var mass := 30.0
+
 const MAX_ROCK_IMPULSE := 100.0 # this is the impulse at mass = 1 ...
 const MIN_ROCK_IMPULSE := 5.0  # but will 0.35be multiplied by sqrt(mass)
 const MAX_ROCK_MASS := 30.0
@@ -197,13 +199,8 @@ func handle_move_input(delta: float) -> void:
 	turn_toward_camera(delta)
 	#
 	if on_floor != 0:
-		print()
-		print(velocity)
 		velocity = velocity.move_toward(basis * input_dir * speed, GROUND_ACC * delta)
-		print(velocity)
-		print(str(basis * input_dir * speed) + " " + str(GROUND_ACC) + " " + str(delta))
 	else:
-		print("abc")
 		var brake_amount := air_brake(delta)
 		velocity += basis * input_dir * AIR_ACC * delta
 		velocity += basis * input_dir * brake_amount*0.5
@@ -443,3 +440,7 @@ func throw_start_direction(start_pos: Vector3) -> Vector3:
 	var start_targ: Vector3 = global_position + $CamPivot/SpringArm.global_basis * Vector3(0.0, 2.5, -3.0)
 	return (start_targ - start_pos).normalized()
 	
+func handle_impulse(impulse: Vector3) -> void:
+	print("----------------------------------")
+	var knock := (1/mass) * impulse
+	velocity += knock

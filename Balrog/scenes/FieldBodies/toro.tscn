@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/field_body.tscn" id="2_o5wnk"]
 [ext_resource type="Shader" path="res://mats/toro.gdshader" id="4_u16qp"]
 
-[sub_resource type="TorusMesh" id="TorusMesh_iq36i"]
+[sub_resource type="TorusMesh" id="TorusMesh_76ryo"]
 material = ExtResource("1_fbye4")
 inner_radius = 2.0
 outer_radius = 4.0
@@ -15,13 +15,13 @@ rings = 128
 height = 240.0
 radius = 120.0
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_y7wb6"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a6yxm"]
 render_priority = 0
 shader = ExtResource("4_u16qp")
 shader_parameter/thickness = 1.0
 
 [sub_resource type="BoxMesh" id="BoxMesh_4vv0w"]
-material = SubResource("ShaderMaterial_y7wb6")
+material = SubResource("ShaderMaterial_a6yxm")
 size = Vector3(4, 4, 4)
 
 [node name="Toro" type="Node3D"]
@@ -29,7 +29,7 @@ script = ExtResource("1_0odgv")
 ring_radius = 20.0
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("TorusMesh_iq36i")
+mesh = SubResource("TorusMesh_76ryo")
 
 [node name="FieldBody" parent="." instance=ExtResource("2_o5wnk")]
 gravitational_half_life = 30.0
