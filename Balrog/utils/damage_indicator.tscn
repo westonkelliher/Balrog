@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3 uid="uid://cacai85pgnmdk"]
+
+[ext_resource type="Script" path="res://utils/damage_indicator.gd" id="1_c4i2w"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_viwqi"]
+font_size = 64
+font_color = Color(0.64, 0.208853, 0.0896, 1)
+
+[node name="DamageIndicator" type="Node2D"]
+script = ExtResource("1_c4i2w")
+
+[node name="Label" type="Label" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -5.0
+offset_top = -11.5
+offset_right = 5.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "0
+"
+label_settings = SubResource("LabelSettings_viwqi")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Timer" type="Timer" parent="."]

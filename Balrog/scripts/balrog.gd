@@ -441,6 +441,5 @@ func throw_start_direction(start_pos: Vector3) -> Vector3:
 	return (start_targ - start_pos).normalized()
 	
 func handle_impulse(impulse: Vector3) -> void:
-	print("----------------------------------")
 	var knock := (1/mass) * impulse
 	velocity += knock

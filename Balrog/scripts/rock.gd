@@ -29,7 +29,7 @@ func apply_redirect() -> void:
 	var perp_proj := target_direction - proj
 	$RayCast3D.target_position = perp_proj
 	#assert()
-	var mult := pow(linear_velocity.length(), 2.0)*0.4 * mass
+	var mult := pow(linear_velocity.length(), 2.0)*0.24 * mass
 	apply_force(perp_proj*mult)
 	var grav_resistance: float = 0.4 + 0.5*($RedirectTimer.time_left / $RedirectTimer.wait_time)
 	apply_force(-total_gravity * grav_resistance)
@@ -102,4 +102,4 @@ func start_throw(impulse: float, start_d: Vector3, targ_d: Vector3) -> void:
 	#apply_impulse(start_d * impulse)
 	target_direction = targ_d
 	linear_velocity += start_d * impulse / mass
-	$RedirectTimer.wait_time = 10.0 / linear_velocity.length() # 5 comes from ~length*2 of start targ position
+	$RedirectTimer.wait_time = 20.0 / linear_velocity.length() # 5 comes from ~length*2 of start targ position

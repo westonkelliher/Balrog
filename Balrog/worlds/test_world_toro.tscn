@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_6bwxh"]
 [ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="1_jynrh"]
 [ext_resource type="PackedScene" uid="uid://33bah3xgwu7a" path="res://utils/field_debugger.tscn" id="3_xgpm0"]
-[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/FieldBodies/toro.tscn" id="4_xen5a"]
+[ext_resource type="PackedScene" uid="uid://smisv57hy4qv" path="res://scenes/FieldBodies/floor.tscn" id="4_41c38"]
 
 [sub_resource type="Environment" id="Environment_a0an1"]
 background_mode = 1
@@ -13,7 +13,7 @@ ambient_light_energy = 0.2
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_db0h4"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_kv7k4"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_c3ahe"]
 
 [node name="TestWorldToro" type="Node3D"]
 script = ExtResource("1_6bwxh")
@@ -26,8 +26,6 @@ camera_attributes = SubResource("CameraAttributesPractical_db0h4")
 transform = Transform3D(1, 0, 0, 0, -0.173648, 0.984808, 0, -0.984807, -0.173648, 249.9, 449.193, -288.149)
 light_color = Color(0.870588, 0.941176, 1, 1)
 light_energy = 0.75
-light_indirect_energy = 2.0
-light_angular_distance = 40.0
 shadow_enabled = true
 shadow_blur = 10.0
 
@@ -39,19 +37,18 @@ shadow_enabled = true
 shadow_blur = 10.0
 
 [node name="Balrog" parent="." instance=ExtResource("1_jynrh")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -4.00259, 14.7696, -0.167244)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -4.00259, 30.0547, -0.167244)
 WING_MULT = 1.0
 
 [node name="Objects" type="Node3D" parent="."]
 
 [node name="FieldDebugger" parent="Objects" instance=ExtResource("3_xgpm0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.64248, 6.12233, -4.37296)
-shape = SubResource("SphereShape3D_kv7k4")
+shape = SubResource("SphereShape3D_c3ahe")
 
 [node name="Rocks" type="Node3D" parent="Objects"]
 
-[node name="Toro" parent="." instance=ExtResource("4_xen5a")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
-ring_radius = 3.0
+[node name="Floor" parent="." instance=ExtResource("4_41c38")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 
 [connection signal="throw_rock" from="Balrog" to="." method="_on_balrog_throw_rock"]

@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxnqab347rvi0"]
+
+[ext_resource type="Script" path="res://scripts/bunbun_rigid.gd" id="1_do6dy"]
+[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://utils/field_collider.tscn" id="2_wvsri"]
+[ext_resource type="PackedScene" uid="uid://cacai85pgnmdk" path="res://utils/damage_indicator.tscn" id="3_m5alo"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_hm7ju"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_va2k0"]
+radius = 0.4
+
+[node name="BunbunRigid" type="RigidBody3D"]
+mass = 3.0
+gravity_scale = 0.0
+script = ExtResource("1_do6dy")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.8, 0, 0, 0, 0.7, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("SphereMesh_hm7ju")
+
+[node name="Mesh" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -0.33, 0.416, -0.294)
+mesh = SubResource("SphereMesh_hm7ju")
+
+[node name="Mesh2" type="MeshInstance3D" parent="Mesh"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0.33, 0.416, -0.294)
+mesh = SubResource("SphereMesh_hm7ju")
+
+[node name="FieldCollider" parent="." instance=ExtResource("2_wvsri")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.042832, 0)
+shape = SubResource("SphereShape3D_va2k0")
+radius = 0.4
+
+[node name="JumpTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="DamageIndicator" parent="." instance=ExtResource("3_m5alo")]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
