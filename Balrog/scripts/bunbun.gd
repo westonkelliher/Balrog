@@ -5,7 +5,7 @@ var field_colliders: Array[FieldCollider] = []
 var field_bodies: Array[FieldBody] = []
 var total_gravity := Vector3.ZERO
 
-var grav_mult := 1.5
+var grav_mult := 1.0
 
 var target_direction := Vector3.ZERO
 
@@ -27,6 +27,9 @@ var V_DMG_THRESHHOLD := 8.0
 var JUMP_SPEED_CALM := 4.0
 var JUMP_SPEED_PANIK := 8.0
 
+var MAX_HEALTH := 20
+var health := MAX_HEALTH
+
 #var floor_distance := 
 var on_floor := false
 
@@ -35,10 +38,19 @@ var pre_hit_velocity := Vector3.ZERO
 
 func _ready() -> void:
 	field_colliders.append($FieldCollider)
+	var new_mesh: Mesh = $Mesh.mesh.duplicate()
+	new_mesh.material = new_mesh.material.duplicate()
+	$Mesh.mesh = new_mesh
+	$Mesh/Mesh.mesh = new_mesh
+	$Mesh/Mesh2.mesh = new_mesh
 	#var temp := global_position
 	#global_position = Vector3(100000.0, 100000.0, 100000.0)
 	#global_position = temp
 	#field_bodies = get_parent().get_node("Balrog").field_bodies
+
+func _process(delta: float) -> void:
+	var mult: float = $InvincibleTimer.time_left / $InvincibleTimer.wait_time
+	$Mesh.mesh.material.set("shader_parameter/damaged", mult)
 
 func _physics_process(delta: float) -> void:
 	calculate_fields(delta)
@@ -166,14 +178,21 @@ func handle_last_hit() -> void:
 	if hit_impact == 0:
 		return
 	var v_delta := (velocity - pre_hit_velocity).length()
-	var mult := (1.0 + v_delta*0.1)
-	print(str(hit_impact) + " " + str(mult))
-	var damage := int(hit_impact * mult * 0.05)
+	var mult := (1.0 + v_delta*0.15)
+	var damage := int(sqrt(hit_impact * mult)) * 0.5
 	hit_impact = 0
 	if damage < 1:
 		return
-	$DamageIndicator.set_number(damage)
+	take_damage(damage)
 	$InvincibleTimer.start()
+
+func take_damage(dmg: int) -> void:
+	var indicator := preload("res://utils/damage_indicator.tscn").instantiate()
+	indicator.set_number(dmg)
+	add_child(indicator)
+	health -= dmg
+	$HealthBar.active = true
+	$HealthBar.set_fill(1.0*health/MAX_HEALTH)
 
 func handle_impulse(impulse: Vector3) -> void:
 	var knock := (1/mass) * impulse
@@ -207,3 +226,8 @@ func jump(angle: float, speed: float) -> void:
 	velocity *= 0.5
 	var jump_vec := global_basis * Vector3.FORWARD.rotated(Vector3.RIGHT, angle)
 	velocity += jump_vec*speed
+
+
+func _on_invincible_timer_timeout() -> void:
+	if health <= 0:
+		queue_free()

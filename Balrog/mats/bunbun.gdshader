@@ -1,11 +1,19 @@
 shader_type spatial;
 
-void vertex() {
-	// Called for every vertex the material is visible on.
+uniform float damaged = 0.0;
+
+
+
+vec3 redden(vec3 c) {
+	float mult = 2.0*damaged;
+	return (c.xyz + mult*vec3(1.0, 0.0, 0.0))/(mult + 1.0);
 }
 
 void fragment() {
-	// Called for every pixel the material is visible on.
+	if (damaged > 0.0 && COLOR.w > 0.0) {
+		ALBEDO.rgb = redden(COLOR.rgb);
+		EMISSION = redden(COLOR.rgb)*0.1;
+	}
 }
 
 //void light() {

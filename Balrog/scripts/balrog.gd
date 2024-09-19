@@ -73,19 +73,19 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	if $UI/ChargeBarL.visible:
 		var screen_size: Vector2 = get_viewport().size
-		var world_point := global_position + global_basis * Vector3(-3.5, 0.0, 0.0)
+		var world_point := global_position + global_basis * Vector3(-3.5, 0.0, -5.0)
 		var screen_point: Vector2 = CAMERA.unproject_position(world_point) + Vector2(250.0, -150.0)
 		screen_point.y = (screen_point.y + screen_size.y*1.6)/3.0
-		screen_point.y = clamp(screen_point.y,  screen_size.y*0.3, screen_size.y*0.7)
+		screen_point.y = clamp(screen_point.y,  screen_size.y*0.2, screen_size.y*0.8)
 		screen_point.x = (screen_point.x + screen_size.x*0.3)/2.0
 		screen_point.x = clamp(screen_point.x, screen_size.x*0.3, screen_size.x*0.7)
 		$UI/ChargeBarL.global_position = screen_point
 	if $UI/ChargeBarR.visible:
 		var screen_size: Vector2 = get_viewport().size
-		var world_point := global_position + global_basis * Vector3(3.5, 0.0, 0.0)
+		var world_point := global_position + global_basis * Vector3(3.5, 0.0, -5.0)
 		var screen_point: Vector2 = CAMERA.unproject_position(world_point) + Vector2(-250.0, -150.0)
 		screen_point.y = (screen_point.y + screen_size.y*1.6)/3.0
-		screen_point.y = clamp(screen_point.y,  screen_size.y*0.3, screen_size.y*0.7)
+		screen_point.y = clamp(screen_point.y,  screen_size.y*0.2, screen_size.y*0.8)
 		screen_point.x = (screen_point.x + screen_size.x*0.7)/2.0
 		screen_point.x = clamp(screen_point.x, screen_size.x*0.3, screen_size.x*0.7)
 		$UI/ChargeBarR.global_position = screen_point
@@ -353,7 +353,7 @@ func handle_use(delta: float) -> bool:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		$CamPivot/SpringArm.rotation.x -= event.relative.y * mouse_sensitivity
-		$UI/CrossHair.position.y = $CamPivot/SpringArm.rotation.x * 150.0
+		$UI/CrossHair.position.y = $CamPivot/SpringArm.rotation.x * 125.0 - 25.0
 		#$CamPivot/SpringArm.rotation.x = 0
 		$CamPivot/SpringArm.rotation_degrees.x = clamp($CamPivot/SpringArm.rotation_degrees.x, -90.0, 80.0)
 		$CamPivot.rotation.y -= event.relative.x * mouse_sensitivity

@@ -26,6 +26,13 @@ class_name ChargeBar
 	get:
 		return HEIGHT
 
+@export var COLOR := Color(0.77, .85, 0.77) :
+	set(value):
+		COLOR = value
+		$Fill.modulate = value
+	get:
+		return COLOR
+	
 
 #### Members ####
 var _fill := 0.0
@@ -34,6 +41,7 @@ var _shown_fill := 0.0
 #### Builtins ####
 func _ready() -> void:
 	END_WIDTH = END_WIDTH
+	COLOR = COLOR
 
 func _process(delta: float) -> void:
 	var move_amt: float = 0.005 + abs(_fill - _shown_fill)*10.0*delta

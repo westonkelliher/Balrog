@@ -8,12 +8,13 @@
 [sub_resource type="Environment" id="Environment_a0an1"]
 background_mode = 1
 background_color = Color(0.212487, 0.427768, 0.798369, 1)
-ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 0.2
+ambient_light_source = 2
+ambient_light_color = Color(0.745098, 0.870588, 1, 1)
+ambient_light_energy = 0.1
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_db0h4"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_c3ahe"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_5c8bk"]
 
 [node name="TestWorldToro" type="Node3D"]
 script = ExtResource("1_6bwxh")
@@ -37,14 +38,14 @@ shadow_enabled = true
 shadow_blur = 10.0
 
 [node name="Balrog" parent="." instance=ExtResource("1_jynrh")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -4.00259, 30.0547, -0.167244)
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -4.00259, 7.27217, -11.7018)
 WING_MULT = 1.0
 
 [node name="Objects" type="Node3D" parent="."]
 
 [node name="FieldDebugger" parent="Objects" instance=ExtResource("3_xgpm0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.64248, 6.12233, -4.37296)
-shape = SubResource("SphereShape3D_c3ahe")
+shape = SubResource("SphereShape3D_5c8bk")
 
 [node name="Rocks" type="Node3D" parent="Objects"]
 

@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://fvuqkji7kuk3"]
+
+[ext_resource type="Script" path="res://utils/health_bar.gd" id="1_dhvwv"]
+[ext_resource type="PackedScene" uid="uid://bmkcdsuvspncr" path="res://utils/charge_bar.tscn" id="2_jl7ws"]
+
+[node name="HealthBar" type="Node2D"]
+script = ExtResource("1_dhvwv")
+
+[node name="ChargeBar" parent="." instance=ExtResource("2_jl7ws")]
+HEIGHT = 8.0
+COLOR = Color(0.5, 0.2055, 0.19, 1)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 5.0

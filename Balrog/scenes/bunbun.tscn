@@ -1,13 +1,19 @@
-[gd_scene load_steps=6 format=3 uid="uid://c5kvl1mobn241"]
+[gd_scene load_steps=8 format=3 uid="uid://c5kvl1mobn241"]
 
 [ext_resource type="Script" path="res://scripts/bunbun.gd" id="1_b06cs"]
 [ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://utils/field_collider.tscn" id="1_omgk2"]
-[ext_resource type="PackedScene" uid="uid://cacai85pgnmdk" path="res://utils/damage_indicator.tscn" id="3_87mul"]
+[ext_resource type="Shader" path="res://mats/bunbun.gdshader" id="2_1eh42"]
+[ext_resource type="PackedScene" uid="uid://fvuqkji7kuk3" path="res://utils/health_bar.tscn" id="4_ibbea"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wilcf"]
+render_priority = 0
+shader = ExtResource("2_1eh42")
+shader_parameter/damaged = 0.0
 
 [sub_resource type="SphereMesh" id="SphereMesh_lubax"]
+material = SubResource("ShaderMaterial_wilcf")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_kldy7"]
-radius = 0.4
+[sub_resource type="SphereShape3D" id="SphereShape3D_n3jge"]
 
 [node name="Bunbun" type="CharacterBody3D"]
 collision_layer = 8
@@ -27,17 +33,19 @@ transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0.33, 0.416, -0.294)
 mesh = SubResource("SphereMesh_lubax")
 
 [node name="FieldCollider" parent="." instance=ExtResource("1_omgk2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.042832, 0)
-shape = SubResource("SphereShape3D_kldy7")
-radius = 0.4
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.128528, 0)
+shape = SubResource("SphereShape3D_n3jge")
+radius = 0.5
 
 [node name="JumpTimer" type="Timer" parent="."]
 one_shot = true
 
-[node name="DamageIndicator" parent="." instance=ExtResource("3_87mul")]
-
 [node name="InvincibleTimer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.4
 one_shot = true
 
+[node name="HealthBar" parent="." instance=ExtResource("4_ibbea")]
+visible = false
+
 [connection signal="timeout" from="JumpTimer" to="." method="_on_jump_timer_timeout"]
+[connection signal="timeout" from="InvincibleTimer" to="." method="_on_invincible_timer_timeout"]
