@@ -1,9 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://s0rqbbcto6nw"]
+[gd_scene load_steps=11 format=3 uid="uid://s0rqbbcto6nw"]
 
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_6bwxh"]
 [ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="1_jynrh"]
-[ext_resource type="PackedScene" uid="uid://33bah3xgwu7a" path="res://utils/field_debugger.tscn" id="3_xgpm0"]
 [ext_resource type="PackedScene" uid="uid://smisv57hy4qv" path="res://scenes/FieldBodies/floor.tscn" id="4_41c38"]
+[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/FieldBodies/toro.tscn" id="4_xen5a"]
+[ext_resource type="PackedScene" uid="uid://c0t02vm8wimey" path="res://scenes/FieldBodies/globe.tscn" id="5_lke58"]
+[ext_resource type="PackedScene" uid="uid://cpxokwjee1lqw" path="res://scenes/rock.tscn" id="6_in5jv"]
+[ext_resource type="PackedScene" uid="uid://c5kvl1mobn241" path="res://scenes/bunbun.tscn" id="7_acr6m"]
+[ext_resource type="PackedScene" uid="uid://dkuuxu5k1u7ga" path="res://scenes/puck.tscn" id="8_rkc6o"]
 
 [sub_resource type="Environment" id="Environment_a0an1"]
 background_mode = 1
@@ -13,8 +17,6 @@ ambient_light_color = Color(0.745098, 0.870588, 1, 1)
 ambient_light_energy = 0.1
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_db0h4"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_5c8bk"]
 
 [node name="TestWorldToro" type="Node3D"]
 script = ExtResource("1_6bwxh")
@@ -38,18 +40,30 @@ shadow_enabled = true
 shadow_blur = 10.0
 
 [node name="Balrog" parent="." instance=ExtResource("1_jynrh")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -4.00259, 7.27217, -11.7018)
+transform = Transform3D(-4.37114e-09, 0, 0.1, 0, 0.1, 0, -0.1, 0, -4.37114e-09, 15.0086, 5, 0)
 WING_MULT = 1.0
+
+[node name="Bunbun" parent="." instance=ExtResource("7_acr6m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.58368, 0, -46.496)
+
+[node name="Puck" parent="." instance=ExtResource("8_rkc6o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.01816, 0, -43.3536)
 
 [node name="Objects" type="Node3D" parent="."]
 
-[node name="FieldDebugger" parent="Objects" instance=ExtResource("3_xgpm0")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.64248, 6.12233, -4.37296)
-shape = SubResource("SphereShape3D_5c8bk")
-
-[node name="Rocks" type="Node3D" parent="Objects"]
+[node name="Toro" parent="." instance=ExtResource("4_xen5a")]
+transform = Transform3D(2, 0, 0, 0, 1.99944, -0.0473289, 0, 0.0473289, 1.99944, 0, 0, 0)
+ring_radius = 7.0
 
 [node name="Floor" parent="." instance=ExtResource("4_41c38")]
-transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+transform = Transform3D(-0.24524, 0.969462, 0, -0.969462, -0.24524, 0, 0, 0, 1, 24.7583, 16.3271, -3.8147e-06)
+ring_radius = 5.0
 
+[node name="Globe" parent="." instance=ExtResource("5_lke58")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 2.74681, 1.85745, -22.6246)
+
+[node name="Rock" parent="." instance=ExtResource("6_in5jv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15343, 0.990475, -43.5885)
+
+[connection signal="throw_puck" from="Balrog" to="." method="_on_balrog_throw_puck"]
 [connection signal="throw_rock" from="Balrog" to="." method="_on_balrog_throw_rock"]

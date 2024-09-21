@@ -22,7 +22,7 @@ var billiarding := 0.5 # how much of a collision impulse is along the normal vs
 					   # a straight velocity transfer
 var torquing := 0.0 # not used yet
 
-var V_DMG_THRESHHOLD := 8.0
+var V_DMG_THRESHHOLD := 4.0 #8.0
 
 var JUMP_SPEED_CALM := 4.0
 var JUMP_SPEED_PANIK := 8.0
@@ -168,6 +168,8 @@ func handle_collisions() -> void:
 			hit_impact = 0.0
 		else:
 			hit_impact = impulse.length() * sqrt(mult)
+		if other is Bunbun:
+			hit_impact = 0.0
 		# TODO: calculate relative surface velocity
 
 # we handle this on the next frame so we can check exactly what happened to 

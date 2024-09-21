@@ -1,11 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://33bah3xgwu7a"]
+[gd_scene load_steps=4 format=3 uid="uid://33bah3xgwu7a"]
 
 [ext_resource type="Script" path="res://utils/field_debugger.gd" id="1_16s3v"]
+[ext_resource type="PackedScene" uid="uid://bxyd1te8fawp4" path="res://utils/field_collider.tscn" id="2_damv6"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_afpg0"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_4k1jq"]
+radius = 1.0
 
-[node name="FieldDebugger" type="CollisionShape3D"]
-shape = SubResource("SphereShape3D_afpg0")
+[node name="FieldDebugger" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.821872, 0.821872, 0.821872)
 script = ExtResource("1_16s3v")
 
-[node name="RayCast" type="RayCast3D" parent="."]
+[node name="FieldCollider" parent="." instance=ExtResource("2_damv6")]
+shape = SubResource("SphereShape3D_4k1jq")
+script = null
+
+[node name="RayCast" type="RayCast3D" parent="FieldCollider"]
+debug_shape_custom_color = Color(1, 1, 1, 1)
+debug_shape_thickness = 5

@@ -20,6 +20,9 @@ script = ExtResource("1_r650x")
 mesh = SubResource("SphereMesh_p4d05")
 
 [node name="FieldBody" parent="." instance=ExtResource("2_p5evs")]
+base_gravity = 20.0
+gravitational_half_life = 2.0
+atmospheric_half_life = 2.0
 
 [node name="Shape" type="CollisionShape3D" parent="FieldBody"]
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)

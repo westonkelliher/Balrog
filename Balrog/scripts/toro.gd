@@ -58,13 +58,13 @@ func get_internal_grav(rp: Vector3) -> Vector3:
 	var far_weight := 1.0/pow(far_abnormal.length(), 2)
 	#
 	return (near_gravity*near_weight + far_gravity*far_weight) / (near_weight + far_weight)
-
+	#return near_gravity
 
 func get_up(rp: Vector3) -> Vector3:
 	var lateral_component := get_lateral_component(rp)
 	var lateral_center := lateral_component.normalized() * ring_radius
-	if lateral_component.length() < ring_radius:
-		return get_internal_normal(rp)
+	#if lateral_component.length() < ring_radius:
+		#return get_internal_normal(rp)
 	return (rp-lateral_center).normalized()
 		# TODO: maybe (prob not) lerp between radial and downward when wanear edge (outside of it tho)
 
@@ -92,7 +92,5 @@ func get_signed_distance(rp: Vector3) -> float:
 	# TODO: have to multiply back the scale
 
 func get_lateral_component(rp: Vector3) -> Vector3:
-	var whole_normal := Vector3.UP
-	var vertical_component := rp.dot(whole_normal) * whole_normal # projections
-	var lateral_component := rp - vertical_component
+	var lateral_component := Vector3(rp.x, 0.0, rp.z)
 	return lateral_component

@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/world.gd" id="1_in03p"]
 [ext_resource type="PackedScene" uid="uid://c8dk41e3poig1" path="res://scenes/balrog.tscn" id="1_uktuf"]
 [ext_resource type="PackedScene" uid="uid://smisv57hy4qv" path="res://scenes/FieldBodies/floor.tscn" id="2_o2wdw"]
-[ext_resource type="PackedScene" uid="uid://ggp5x2p3hydj" path="res://scenes/FieldBodies/toro.tscn" id="3_3okrx"]
 [ext_resource type="PackedScene" uid="uid://bv0go7ahmo24" path="res://scenes/ramp.tscn" id="4_exocp"]
+[ext_resource type="PackedScene" uid="uid://c0t02vm8wimey" path="res://scenes/FieldBodies/globe.tscn" id="5_6y8tb"]
 [ext_resource type="PackedScene" uid="uid://c5kvl1mobn241" path="res://scenes/bunbun.tscn" id="6_qrdy8"]
 
 [sub_resource type="Environment" id="Environment_smc3c"]
@@ -29,8 +29,7 @@ shadow_opacity = 0.5
 shadow_blur = 5.0
 
 [node name="Balrog" parent="." instance=ExtResource("1_uktuf")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 6.41151, 2.44837, -0.829847)
-GROUND_ACC = 0.01
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 6.41151, 10.2305, -0.829847)
 WING_MULT = 0.5
 
 [node name="Objects" type="Node3D" parent="."]
@@ -41,28 +40,28 @@ transform = Transform3D(1.02271, 0, 2.82029, 0, 3, 0, -2.82029, 0, 1.02271, 0, 1
 [node name="Rocks" type="Node3D" parent="Objects"]
 
 [node name="Node3D" type="Node3D" parent="."]
-
-[node name="Toro" parent="Node3D" instance=ExtResource("3_3okrx")]
-transform = Transform3D(1, 0, 0, 0, 0.261111, -0.965309, 0, 0.965309, 0.261111, 0, 19.6624, -38.2502)
+transform = Transform3D(0.3, 0, 0, 0, 0.3, 0, 0, 0, 0.3, 0, 0, 0)
 
 [node name="Floor" parent="Node3D" instance=ExtResource("2_o2wdw")]
 
-[node name="Toro2" parent="Node3D" instance=ExtResource("3_3okrx")]
-transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, -50, 10, 0)
+[node name="Floor2" parent="Node3D" instance=ExtResource("2_o2wdw")]
+transform = Transform3D(1.27686, 1.53936, 0, -1.53936, 1.27686, 0, 0, 0, 2, -71.4547, 59.0404, 71.9103)
+ring_radius = 10.0
 
-[node name="Toro3" parent="Node3D" instance=ExtResource("3_3okrx")]
-transform = Transform3D(1, 0, 0, 0, -0.748551, -0.663077, 0, 0.663077, -0.748551, 0, 10.3615, 55.718)
+[node name="Globe" parent="Node3D" instance=ExtResource("5_6y8tb")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 62.5966, 12.7792, 65.2918)
 
-[node name="Toro4" parent="Node3D" instance=ExtResource("3_3okrx")]
-transform = Transform3D(0.230644, 0.6452, -0.728368, 0, -0.748551, -0.663077, -0.973038, 0.152935, -0.172649, 55.4302, 10.3615, 17.8402)
+[node name="Globe2" parent="Node3D" instance=ExtResource("5_6y8tb")]
+transform = Transform3D(4.8, 0, 0, 0, 4.8, 0, 0, 0, 4.8, 78.7358, 12.7792, 65.2918)
 
-[node name="Toro5" parent="Node3D" instance=ExtResource("3_3okrx")]
-transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, -76, 10, 0)
+[node name="Globe3" parent="Node3D" instance=ExtResource("5_6y8tb")]
+transform = Transform3D(6.91199, 0, 0, 0, 6.91199, 0, 0, 0, 6.91199, 95.8236, 12.7792, 65.2918)
 
-[node name="Toro6" parent="Node3D" instance=ExtResource("3_3okrx")]
-transform = Transform3D(-4.37114e-08, 1, -4.37114e-08, 0, -4.37114e-08, -1, -1, -4.37114e-08, 1.91069e-15, -62, 10, 0)
+[node name="Globe4" parent="Node3D" instance=ExtResource("5_6y8tb")]
+transform = Transform3D(14.3327, 0, 0, 0, 14.3327, 0, 0, 0, 14.3327, 122.598, 12.7792, 65.2918)
 
 [node name="Bunbun" parent="." instance=ExtResource("6_qrdy8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.168, 4.84597, 14.5835)
 
+[connection signal="throw_puck" from="Balrog" to="." method="_on_balrog_throw_puck"]
 [connection signal="throw_rock" from="Balrog" to="." method="_on_balrog_throw_rock"]

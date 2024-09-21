@@ -25,7 +25,12 @@ var atmosphere_func: Callable = default_atmosphere
 func _notification(what: int) -> void:
 	if what == Node3D.NOTIFICATION_TRANSFORM_CHANGED:
 		var gs := global_basis.get_scale()
-		assert(gs.x == gs.y and gs.x == gs.z) # uniform scaling required
+		#print(str(gs.x) + " " +str(gs.x) + " " +str(gs.x) )
+		#if gs.x == gs.y and gs.x == gs.z:
+			#print("sas")
+		#else:
+			#print("no")
+		assert(abs(gs.x - gs.y) < 0.0001 and abs(gs.x - gs.z) < 0.0001) # uniform scaling required
 		uniform_scale = gs.x
 
 # default to a sphere
@@ -48,14 +53,14 @@ func surface_normal(p: Vector3) -> Vector3:
 
 func default_gravity(p: Vector3) -> Vector3:
 	var ghl := gravitational_half_life
-	return -field_up.call(p) * base_gravity * ghl / (ghl + field_sdf(p))
+	return -field_up(p) * base_gravity * ghl / (ghl + field_sdf(p))  * uniform_scale
 
 func default_up(p: Vector3) -> Vector3:
 	return surface_normal(p)
 
 func default_atmosphere(rp: Vector3) -> float:
 	var ahl := atmospheric_half_life
-	return ahl / (ahl + field_sdf(rp))
+	return ahl / (ahl + field_sdf(rp)) * uniform_scale
 
 ##
 
@@ -66,7 +71,7 @@ func field_sdf(p: Vector3) -> float:
 
 func field_up(p: Vector3) -> Vector3:
 	var rp := global_transform.affine_inverse() * p
-	return up_func.call(rp)
+	return global_basis * up_func.call(rp) / uniform_scale
 
 func field_gravity(p: Vector3) -> Vector3:
 	return gravity_func.call(p)
@@ -81,13 +86,13 @@ func field_atmosphere(p: Vector3) -> float:
 		#_on_body_entered(body)
 
 func _on_body_entered(body: Node3D) -> void:
-	#print("enter")
+	print("enter")
 	bodies.append(body)
 	if "field_bodies" in body:
 		body.field_bodies.append(self)
 
 func _on_body_exited(body: Node3D) -> void:
-	#print("exit")
+	print("exit")
 	bodies.erase(body)
 	if "field_bodies" in body:
 		var g: Array = body.field_bodies

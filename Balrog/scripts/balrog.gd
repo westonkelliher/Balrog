@@ -2,6 +2,7 @@ extends CharacterBody3D
 class_name Balrog
 
 signal throw_rock(rock: Rock)
+signal throw_puck(puck: Puck)
 
 @export var mouse_sensitivity := 0.0055
 @export var rotation_speed := 4.0
@@ -312,6 +313,8 @@ func handle_selector_input(delta: float) -> void:
 
 # returns true if currently using something
 func handle_use(delta: float) -> bool:
+	if Input.is_action_just_released("puck"):
+		throw_prucktile()
 	if on_floor == 0.0:
 		$UI/ChargeBarL.visible = false
 		$UI/ChargeBarR.visible = false
@@ -443,3 +446,14 @@ func throw_start_direction(start_pos: Vector3) -> Vector3:
 func handle_impulse(impulse: Vector3) -> void:
 	var knock := (1/mass) * impulse
 	velocity += knock
+
+func throw_prucktile() -> void:
+	var puck := preload("res://scenes/puck.tscn").instantiate()
+	puck.field_bodies = field_bodies
+	var puck_start := Vector3(0.0, 3.0, -1.0)
+	puck.position = global_position + global_basis * puck_start
+	puck.velocity = velocity
+	var force := MIN_ROCK_IMPULSE + (MAX_ROCK_IMPULSE-MIN_ROCK_IMPULSE) * 0.5;
+	var impulse: Vector3 = $CamPivot/SpringArm.global_basis * Vector3.FORWARD * force
+	puck.handle_impulse(impulse)
+	throw_puck.emit(puck)

@@ -4,8 +4,11 @@ extends Node2D
 var active := false :
 	set(value):
 		active = value
+		print(value)
 		if value:
 			$Timer.start()
+	get:
+		return active
 
 func _ready() -> void:
 	set_fill(1.0)

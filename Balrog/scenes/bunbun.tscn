@@ -13,11 +13,11 @@ shader_parameter/damaged = 0.0
 [sub_resource type="SphereMesh" id="SphereMesh_lubax"]
 material = SubResource("ShaderMaterial_wilcf")
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_n3jge"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_h00v4"]
 
 [node name="Bunbun" type="CharacterBody3D"]
 collision_layer = 8
-collision_mask = 15
+collision_mask = 7
 script = ExtResource("1_b06cs")
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
@@ -34,7 +34,7 @@ mesh = SubResource("SphereMesh_lubax")
 
 [node name="FieldCollider" parent="." instance=ExtResource("1_omgk2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.128528, 0)
-shape = SubResource("SphereShape3D_n3jge")
+shape = SubResource("SphereShape3D_h00v4")
 radius = 0.5
 
 [node name="JumpTimer" type="Timer" parent="."]
