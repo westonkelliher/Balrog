@@ -13,18 +13,20 @@ varying mat4 modelview;
 
 uniform float ring_radius = 1.0;
 uniform float scale = 1.0;
+uniform int type = 0;
+const int T_SPHERE = 1;
+const int T_TORUS = 2;
+const int T_DISK = 3;
 
 float noiseSdf(vec3 p) {
 	float freq = 4.0;
-	//return 30.0*sin(p.x*freq*2.2) + sin(p.x*freq*9.2) + sin(p.y*freq*8.2) +
-		//30.0*sin(p.y*freq*1.5) + 30.0*sin(p.z*freq*1.7) + sin(p.z*freq*7.2);
 	return max(sin(p.x*freq*9.2) + sin(p.y*freq*8.2) + sin(p.z*freq*7.2),0.0);
 }
 
-float hash(vec3 p) {
-    p = fract(p * 0.3183099 + vec3(0.71, 0.11, 0.93));
-    return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
-}
+//float hash(vec3 p) {
+    //p = fract(p * 0.3183099 + vec3(0.71, 0.11, 0.93));
+    //return fract(sin(dot(p, vec3(127.1, 311.7, 74.7))) * 43758.5453);
+//}
 
 vec3 rotate(vec3 v, vec3 axis, float angle) {
     float cos_angle = cos(angle);
@@ -38,7 +40,7 @@ vec3 rotate(vec3 v, vec3 axis, float angle) {
 float fractalNoise(vec3 p) {
     const int octaves = 5;
     float persistence = 0.5;
-    float frequency = 0.2;
+    float frequency = 0.08;
     float amplitude = 2.0;
     float total = 0.0;
 	vec3 pp = p;
@@ -53,27 +55,65 @@ float fractalNoise(vec3 p) {
     return total;
 }
 
-float sdfTorus(vec3 p, float radius, float thickness) { // return distance and normal
+
+float sdfSphere(vec3 p, float thickness) {
+	float dist = length(p) - thickness;
+	return dist;
+}
+
+float sdfTorus(vec3 p, float radius, float thickness) {
 	vec3 vert = vec3(0.0, p.y, 0.0);
 	vec3 lat = p - vert;
 	vec3 lat_c = normalize(lat) * radius;
 	vec3 abnormal = p - lat_c;
-	float dist = length(abnormal) - thickness + fractalNoise(p)*0.0002;
+	float dist = length(abnormal) - thickness;// + fractalNoise(p)*0.0002;
 	//vec3 norm = normalize(abnormal);
 	return dist;
 }
+
+float sdfDisk(vec3 p, float radius, float thickness) {
+	vec3 vert = vec3(0.0, p.y, 0.0);
+	vec3 lat = p - vert;
+	if (length(lat) < radius) {
+		return length(vert) - thickness;
+	}
+	vec3 lat_c = normalize(lat) * radius;
+	vec3 abnormal = p - lat_c;
+	float dist = length(abnormal) - thickness;
+	return dist;
+}
+
+
+float sdf(vec3 p) {
+		float dist = 0.0;
+		switch (type) {
+			case T_SPHERE:
+				dist = sdfSphere(p, scale);
+				break;
+			case T_TORUS:
+				dist = sdfTorus(p, ring_radius*scale, scale);
+				break;
+			case T_DISK:
+				dist = sdfDisk(p, ring_radius*scale, scale);
+				break;
+			default:
+				return 0.;
+		}
+		return dist;
+}
+
 
 vec3 estimateNormal(vec3 p) {
     float epsilon = 0.01; // Small offset for finite differences
     vec2 e = vec2(1.0, -1.0) * epsilon;
 
     // Compute finite differences in each direction
-    float dx = sdfTorus(p + vec3(e.x, 0.0, 0.0), ring_radius*scale, 1.0*scale) - 
-		sdfTorus(p + vec3(e.y, 0.0, 0.0), ring_radius*scale, 1.0*scale);
-    float dy = sdfTorus(p + vec3(0.0, e.x, 0.0), ring_radius*scale, 1.0*scale) - 
-		sdfTorus(p + vec3(0.0, e.y, 0.0), ring_radius*scale, 1.0*scale);
-    float dz = sdfTorus(p + vec3(0.0, 0.0, e.x), ring_radius*scale, 1.0*scale) - 
-		sdfTorus(p + vec3(0.0, 0.0, e.y), ring_radius*scale, 1.0*scale);
+    float dx = sdf(p + vec3(e.x, 0.0, 0.0)) - 
+		sdf(p + vec3(e.y, 0.0, 0.0));
+    float dy = sdf(p + vec3(0.0, e.x, 0.0)) - 
+		sdf(p + vec3(0.0, e.y, 0.0));
+    float dz = sdf(p + vec3(0.0, 0.0, e.x)) - 
+		sdf(p + vec3(0.0, 0.0, e.y));
 
     // Combine the partial derivatives into the gradient vector
     vec3 normal = vec3(dx, dy, dz);
@@ -82,14 +122,15 @@ vec3 estimateNormal(vec3 p) {
     return normalize(normal);
 }
 
-vec3 NormalTorus(vec3 p) {
-	vec3 vert = vec3(0.0, p.y, 0.0);
-	vec3 lat = p - vert;
-	vec3 lat_c = normalize(lat) * ring_radius;
-	vec3 abnormal = p - lat_c;
-	//vec3 norm = normalize(abnormal);
-	return normalize(abnormal);
-}
+//vec3 NormalTorus(vec3 p) {
+	//vec3 vert = vec3(0.0, p.y, 0.0);
+	//vec3 lat = p - vert;
+	//vec3 lat_c = normalize(lat) * ring_radius;
+	//vec3 abnormal = p - lat_c;
+	////vec3 norm = normalize(abnormal);
+	//return normalize(abnormal);
+//}
+
 
 // return total distance travelled ( plus extra)
 vec2 RayMarch(vec3 ro, vec3 rd) { //vec2(total_dist, nearest_dist)
@@ -98,7 +139,7 @@ vec2 RayMarch(vec3 ro, vec3 rd) { //vec2(total_dist, nearest_dist)
 
 	for (int i = 0; i < MAX_STEPS; i++) {
 		vec3 p = ro + dO * rd;
-		float dist = sdfTorus(p, ring_radius*scale, scale);
+		float dist = sdf(p);
 		if (dist < minDist) {
 			minDist = dist;
 		}
@@ -128,16 +169,6 @@ void fragment() {
 	float d = rm.x;
 	float dd = rm.y;
 	vec3 p = ro + rd * d;
-	//if (d < DEPTH) {
-		//discard;
-	//}
-	//float angle_factor = length(rd.y);
-	//float qqq = 0.5;
-	//vec4 clip_pos = PROJECTION_MATRIX * modelview * vec4(p, 1.0);
-	//DEPTH = (clip_pos.z / clip_pos.w) * 0.5 + 0.5;
-	//DEPTH = 1.0/(2.+pow(d*900.0,0.7));
-	//DEPTH = 1.0/(pow(d*70.0,1.0));
-	//DEPTH = -1.5;
 	if (d >= MAX_DIST) {
 		discard;
 		if (dd > 0.1) {
@@ -149,10 +180,6 @@ void fragment() {
 	} else {
 		n = estimateNormal(p);
 		NORMAL = n;
-		//n = normalize(p);
-		//float r = abs(1.0 - 2.0*mod(n.x*2.0, 1.0));
-		//float g = abs(1.0 - 2.0*mod(n.y*2.0, 1.0));
-		//float b = abs(1.0 - 2.0*mod(n.z*2.0, 1.0));
 		float r = (n.x+0.5)/1.7;
 		float g = (n.y+0.5)/1.7;
 		float b = (n.z+0.5)/1.7;
@@ -161,7 +188,7 @@ void fragment() {
 		float blackness = smoothstep(-0.1, 0.0, dot(n, rd));
 		vec3 grass_c = vec3(0.1, 0.5, 0.05);
 		vec3 dirt_c = vec3(0.6, 0.8, 0.1);
-		float m = clamp(fractalNoise(p)*0.2, 0.0, 1.0);
+		float m = clamp(fractalNoise((MODEL_MATRIX * vec4(p,1.)).xyz)*0.2, 0.0, 1.0);
 		vec3 ground_color = mix(grass_c, dirt_c, 0.2-m*0.2);
 		ALBEDO = ground_color*(1.0-blackness);
 	}
@@ -171,14 +198,13 @@ void fragment() {
     // Compute depth
     float ndc_depth = clip_space_position.z / clip_space_position.w;
     DEPTH = ndc_depth * 0.5 + 0.5; // Map from [-1, 1] to [0, 1]
-	DEPTH = pow(DEPTH, 9.0);
-	//NORMAL = n;
-	//max(min((rd - camera_direction).x, 1.0), 0.0);
-	//ALBEDO = vec3(1.)*DEPTH; 
+	DEPTH = pow(DEPTH, 10.0);
 }
 
 
 void light() {
 	DIFFUSE_LIGHT += 0.3 * ATTENUATION * LIGHT_COLOR * clamp(dot(NORMAL, LIGHT), 0.0, 1.0);
+	//float q = length(DIFFUSE_LIGHT);
+	//DIFFUSE_LIGHT *= float(int(q*10.0))/10.0 / q;
 	//SPECULAR_LIGHT = vec3(0.);
 }

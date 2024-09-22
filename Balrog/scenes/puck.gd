@@ -31,7 +31,6 @@ func reorient(delta: float) -> void:
 	if $StraightTimer.time_left > 0.0:
 		var mult: float = $StraightTimer.time_left / $StraightTimer.wait_time
 		mult = pow(mult, 0.3)
-		print(mult)
 		new_forward = old_forward*mult + new_forward*(1.0-mult)
 	var speed := velocity.length()
 	velocity = new_forward * speed

@@ -1,33 +1,42 @@
-#@tool
+@tool
 extends Node3D
 
 @export var ring_radius := 1.0 :
 	set(value):
 		ring_radius = value
-		if !has_node("Flat"):
+		if !has_node("Box"):
+			print("A")
 			return
-		$Flat.mesh.top_radius = value
-		$Flat.mesh.bottom_radius = value
-		$Flat.mesh.height = 2.0
+		print("B")
+		$Box.mesh.material.set("shader_parameter/ring_radius", value)
+		#print("-" + str($Box.mesh.material))
+		$Box.mesh.size.x = value*2 + 2
+		$Box.mesh.size.z = value*2 + 2
 		#
-		$Edge.mesh.inner_radius = value - 1.0
-		$Edge.mesh.outer_radius = value + 1.0
+		$FieldBody/Shape.shape.height = ring_radius * 6
+		$FieldBody/Shape.shape.radius = ring_radius * 3
 	get:
 		return ring_radius
 
-
+func _notification(what: int) -> void:
+	if what == Node3D.NOTIFICATION_TRANSFORM_CHANGED:
+		$Box.mesh.material.set("shader_parameter/scale", global_basis.get_scale().x)
+	
 
 
 func _ready() -> void:
+	print("abc")
 	$FieldBody.sdf_func = get_signed_distance
 	$FieldBody.up_func = get_up
 	#
-	$Flat.mesh = $Flat.mesh.duplicate()
-	$Edge.mesh = $Edge.mesh.duplicate()
-	ring_radius = ring_radius
+	$Box.mesh = $Box.mesh.duplicate()
+	$Box.mesh.material = preload("res://mats/field_body_mat.tres").duplicate()
+	$Box.mesh.material.set("shader_parameter/type", 3)
+	print("-A")
+	$Box.mesh.material.set("shader_parameter/ring_radius", .5)
+	print("--A")
 	#
-	$FieldBody/Shape.shape.height = ring_radius * 6
-	$FieldBody/Shape.shape.radius = ring_radius * 3
+	ring_radius = ring_radius
 
 func get_signed_distance(rp: Vector3) -> float:
 	var vertical_component := Vector3(0.0, rp.y,  0.0)

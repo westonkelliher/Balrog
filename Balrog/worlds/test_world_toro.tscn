@@ -63,14 +63,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.66726, 1.85745, -16.1655)
 [node name="Globe" parent="Environment" instance=ExtResource("5_lke58")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 2.74681, 1.85745, -22.6246)
 
-[node name="Floor" parent="Environment" instance=ExtResource("4_41c38")]
-transform = Transform3D(-0.0523105, 0.206789, -0.976986, -0.969462, -0.24524, 7.98381e-09, -0.239596, 0.947151, 0.213303, 12.7876, 2.11321, -5.34947)
-ring_radius = 5.0
-
 [node name="Toro" parent="Environment" instance=ExtResource("4_xen5a")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -2.16945, 0, 0)
+
+[node name="Toro3" parent="Environment" instance=ExtResource("4_xen5a")]
+transform = Transform3D(0.662187, -3.94481, 0, 3.94481, 0.662187, 0, 0, 0, 4, 29.4765, 12.8434, 0)
+ring_radius = 2.0
 
 [node name="Toro2" parent="Environment" instance=ExtResource("4_xen5a")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -13.9535, 1.11592, 0)
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -27, 0, 5)
+ring_radius = 2.0
+
+[node name="Floor" parent="Environment" instance=ExtResource("4_41c38")]
+ring_radius = 5.0
 
 [connection signal="throw_puck" from="Balrog" to="." method="_on_balrog_throw_puck"]
 [connection signal="throw_rock" from="Balrog" to="." method="_on_balrog_throw_rock"]

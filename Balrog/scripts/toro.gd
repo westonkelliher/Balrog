@@ -4,12 +4,10 @@ extends Node3D
 @export var ring_radius := 1.0 :
 	set(value):
 		ring_radius = value
-		if !has_node("Mesh"):
+		if !has_node("Box"):
 			return
-		$Mesh.mesh.inner_radius = value - 1.0
-		$Mesh.mesh.outer_radius = value + 1.0
 		$Box.mesh.material.set("shader_parameter/ring_radius", value)
-		print("-" + str($Box.mesh.material))
+		#print("-" + str($Box.mesh.material))
 		$Box.mesh.size.x = value*2 + 2
 		$Box.mesh.size.z = value*2 + 2
 	get:
@@ -25,12 +23,11 @@ func _notification(what: int) -> void:
 func _ready() -> void:
 	$FieldBody.sdf_func = get_signed_distance
 	$FieldBody.up_func = get_up
-	#$FieldBody.gravity_func = get_grav
 	#
-	$Mesh.mesh = $Mesh.mesh.duplicate()
-	#$Box.mesh = $Box.mesh.duplicate()
-	#$Box.mesh.material = $Box.mesh.material.duplicate()
-	print("ini " + str($Box.mesh.material))
+	$Box.mesh = $Box.mesh.duplicate()
+	$Box.mesh.material = preload("res://mats/field_body_mat.tres").duplicate()
+	$Box.mesh.material.set("shader_parameter/type", 2)
+	#print("ini " + str($Box.mesh.material))
 	#$Box.mesh.material.shader = $Box.mesh.material.shader.duplicate()
 	ring_radius = ring_radius
 	#

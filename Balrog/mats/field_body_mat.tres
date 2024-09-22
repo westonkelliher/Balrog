@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://d2d0dcoc58ycu"]
+
+[ext_resource type="Shader" path="res://mats/fieldbody.gdshader" id="1_iosxl"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_iosxl")
+shader_parameter/ring_radius = 2.0
+shader_parameter/scale = 1.0
+shader_parameter/type = 0

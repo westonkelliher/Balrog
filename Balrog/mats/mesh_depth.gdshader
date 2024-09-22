@@ -28,7 +28,7 @@ void fragment() {
     // Compute depth
     float ndc_depth = clip_space_position.z / clip_space_position.w;
     DEPTH = ndc_depth * 0.5 + 0.5; // Map from [-1, 1] to [0, 1]
-	DEPTH = pow(DEPTH, 9.0);
+	DEPTH = pow(DEPTH, 10.0);
 	//DEPTH = 1.0 - DEPTH;
 	//DEPTH = 1.0/(1.0 + length(position - camera)*1.0);
 	ALBEDO = vec3(0.4, 0.9, 0.2);//*max(min((rd - camera_direction).x, 1.0), 0.0);
