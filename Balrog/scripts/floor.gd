@@ -1,4 +1,4 @@
-@tool
+#@tool
 extends Node3D
 
 @export var ring_radius := 1.0 :

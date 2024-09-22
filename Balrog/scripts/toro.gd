@@ -8,14 +8,19 @@ extends Node3D
 			return
 		$Mesh.mesh.inner_radius = value - 1.0
 		$Mesh.mesh.outer_radius = value + 1.0
+		$Box.mesh.material.set("shader_parameter/ring_radius", value)
+		print("-" + str($Box.mesh.material))
+		$Box.mesh.size.x = value*2 + 2
+		$Box.mesh.size.z = value*2 + 2
 	get:
 		return ring_radius
 
+func _notification(what: int) -> void:
+	if what == Node3D.NOTIFICATION_TRANSFORM_CHANGED:
+		$Box.mesh.material.set("shader_parameter/scale", global_basis.get_scale().x)
+		
 
 
-#@export var atmospheric_half_life := 10.0
-#@export var gravitational_half_life := 20.0
-#@export var base_gravity := 9.8 * 2.0
 
 func _ready() -> void:
 	$FieldBody.sdf_func = get_signed_distance
@@ -23,7 +28,10 @@ func _ready() -> void:
 	#$FieldBody.gravity_func = get_grav
 	#
 	$Mesh.mesh = $Mesh.mesh.duplicate()
-	$Box.mesh.material = $Box.mesh.material.duplicate()
+	#$Box.mesh = $Box.mesh.duplicate()
+	#$Box.mesh.material = $Box.mesh.material.duplicate()
+	print("ini " + str($Box.mesh.material))
+	#$Box.mesh.material.shader = $Box.mesh.material.shader.duplicate()
 	ring_radius = ring_radius
 	#
 

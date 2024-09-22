@@ -12,12 +12,15 @@ var atmosphere_func: Callable = default_atmosphere
 @export var atmospheric_half_life: float = 1.0
 @export var uniform_scale := 1.0 :
 	set(value):
+		if value < 0.01:
+			return
 		var s := global_basis.get_scale().x
 		var ratio := value/s
 		get_parent().scale *= ratio
 		uniform_scale = global_basis.get_scale().x
 	get:
 		return global_basis.get_scale().x
+		#return .x
 		
 		
 
@@ -86,14 +89,14 @@ func field_atmosphere(p: Vector3) -> float:
 		#_on_body_entered(body)
 
 func _on_body_entered(body: Node3D) -> void:
-	print("enter")
 	bodies.append(body)
 	if "field_bodies" in body:
+		print("enter")
 		body.field_bodies.append(self)
 
 func _on_body_exited(body: Node3D) -> void:
-	print("exit")
 	bodies.erase(body)
 	if "field_bodies" in body:
+		print("exit")
 		var g: Array = body.field_bodies
 		g.erase(self)

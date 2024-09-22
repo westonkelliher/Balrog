@@ -1,11 +1,15 @@
-[gd_scene load_steps=6 format=3 uid="uid://c0t02vm8wimey"]
+[gd_scene load_steps=7 format=3 uid="uid://c0t02vm8wimey"]
 
-[ext_resource type="Material" uid="uid://gge1nkc5bfx0" path="res://mats/grass.tres" id="1_c8dl1"]
 [ext_resource type="Script" path="res://scripts/globe.gd" id="1_r650x"]
+[ext_resource type="Shader" path="res://mats/mesh_depth.gdshader" id="2_jt3qq"]
 [ext_resource type="PackedScene" uid="uid://b4nmmlsklqy2u" path="res://scenes/field_body.tscn" id="2_p5evs"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ycpyc"]
+render_priority = 0
+shader = ExtResource("2_jt3qq")
+
 [sub_resource type="SphereMesh" id="SphereMesh_p4d05"]
-material = ExtResource("1_c8dl1")
+material = SubResource("ShaderMaterial_ycpyc")
 radius = 1.0
 height = 2.0
 

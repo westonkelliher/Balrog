@@ -21,7 +21,7 @@ height = 30.0
 radius = 15.0
 
 [node name="Floor" type="StaticBody3D"]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 collision_mask = 6
 script = ExtResource("1_1ejcy")
 ring_radius = 50.0
@@ -33,7 +33,8 @@ mesh = SubResource("CylinderMesh_hx5dt")
 mesh = SubResource("TorusMesh_ue0br")
 
 [node name="FieldBody" parent="." instance=ExtResource("2_ddtix")]
-base_gravity = 25.0
+gravitational_half_life = 10.0
+atmospheric_half_life = 10.0
 
 [node name="Shape" type="CollisionShape3D" parent="FieldBody"]
 shape = SubResource("CylinderShape3D_r6fy6")
